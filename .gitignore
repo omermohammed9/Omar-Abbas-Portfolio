@@ -12,13 +12,24 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+*.log
 
 # environment variables
 .env
+.env.local
+.env.*.local
 .env.production
 
-# macOS-specific files
+# OS-specific files
 .DS_Store
+Thumbs.db
+desktop.ini
 
-# jetbrains setting folder
+# IDEs and editors
 .idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Netlify
+.netlify/
