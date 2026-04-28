@@ -10,7 +10,7 @@ github: "https://github.com/omermohammed9/"
 
 
 ## Professional Summary
-Results-driven professional bridging the gap between technical execution and business strategy. Holds a degree in Software Engineering with a minor in Business Management. Offers a unique blend of backend development expertise (Java, Node.js, Microservices) and robust operational skills, certified in SAP S/4HANA Business Process Integration. Demonstrated success in cross-functional roles, team mentorship, project coordination, and client-facing communication. Actively seeking opportunities to leverage both technical architecture and business management acumen to drive impactful technology solutions.
+Results-driven professional bridging the gap between technical execution and business strategy through AI-augmented workflows. Holds a degree in Software Engineering with a minor in Business Management. Offers a unique blend of backend development expertise (Java, Node.js, Microservices) and robust operational skills, certified in SAP S/4HANA Business Process Integration. Expert in leveraging AI as a force multiplier for rapid development, legacy project reconstruction, and strategic problem-solving. Demonstrated success in cross-functional roles, team mentorship, project coordination, and client-facing communication. Actively seeking opportunities to leverage both technical architecture and business management acumen to drive impactful technology solutions.
 
 ## Education
 **Bachelor of Science in Software Engineering | Minor: Business Management**
@@ -25,7 +25,8 @@ Results-driven professional bridging the gap between technical execution and bus
 - **Software Architectures:** Microservices, MVC (Model-View-Controller)
 - **ORM Technologies:** Prisma, TypeORM
 - **Business & Management:** Business Process Integration (SAP), SAP Activate, Cross-Functional Leadership, Project Coordination, Career Mentorship, Client Relations, Data Administration (Excel)
-- **Soft Skills:** Problem-solving, Team Leadership, Communication
+- **AI & Prompt Engineering:** Professional Prompt Engineering, AI-Assisted Coding & Architecture, AI API Integration (LLMs, Computer Vision), Automated Workflows, Legacy Code Reconstruction using AI, Rapid Prototyping
+- **Soft Skills:** Problem-solving, Team Leadership, Communication, Adaptive Learning (Rapid Tech Adoption)
 - **Languages:** Arabic (Native), English (Fluent), Kurdish (Intermediate)
 
 ## Professional Experience

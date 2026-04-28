@@ -1,10 +1,12 @@
 import React from "react"
 import { usePersona } from "./PersonaContext"
+import { useLanguage } from "./LanguageContext"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 
 export default function FilterGroup() {
   const [filter, setFilter] = React.useState<string>("All")
   const { persona } = usePersona()
+  const { language, t, isRtl } = useLanguage()
 
   const activeColor = persona === "engineer" ? "data-[state=on]:bg-emerald-600" : "data-[state=on]:bg-blue-600"
 
@@ -15,11 +17,8 @@ export default function FilterGroup() {
     const headers = container.querySelectorAll("h3")
     
     headers.forEach((h3) => {
-      let tags = h3.getAttribute("data-tags")
-      if (!tags) {
-          tags = h3.textContent || ""
-          h3.setAttribute("data-tags", tags)
-      }
+      // Always use current textContent for filtering to handle language changes
+      const tags = h3.textContent || ""
       
       let isMatch = false
       if (filter === "All") {
@@ -34,13 +33,13 @@ export default function FilterGroup() {
       if (h3.innerHTML.includes("[Technical]")) {
         h3.innerHTML = h3.innerHTML.replace(
           "[Technical]", 
-          `<span class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-blue-200 dark:border-blue-500/30 bg-blue-100 dark:bg-blue-500/10 text-blue-700 dark:text-blue-400 shadow-sm hover:bg-blue-200 dark:hover:bg-blue-500/20 ml-3 align-middle backdrop-blur-sm">Technical</span>`
+          `<span class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-[10px] font-bold transition-colors border-blue-200 dark:border-blue-500/30 bg-blue-100 dark:bg-blue-500/10 text-blue-700 dark:text-blue-400 shadow-sm ${isRtl ? 'mr-3' : 'ml-3'} align-middle backdrop-blur-sm">${t("filter.technical")}</span>`
         )
       }
       if (h3.innerHTML.includes("[Management]")) {
         h3.innerHTML = h3.innerHTML.replace(
           "[Management]", 
-          `<span class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-emerald-200 dark:border-emerald-500/30 bg-emerald-100 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 shadow-sm hover:bg-emerald-200 dark:hover:bg-emerald-500/20 ml-3 align-middle backdrop-blur-sm">Management</span>`
+          `<span class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-[10px] font-bold transition-colors border-emerald-200 dark:border-emerald-500/30 bg-emerald-100 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 shadow-sm ${isRtl ? 'mr-3' : 'ml-3'} align-middle backdrop-blur-sm">${t("filter.management")}</span>`
         )
       }
 
@@ -62,7 +61,7 @@ export default function FilterGroup() {
         nextElement = nextElement.nextElementSibling
       }
     })
-  }, [filter])
+  }, [filter, language]) // Re-run when language changes too
 
   return (
     <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -74,13 +73,13 @@ export default function FilterGroup() {
       >
 
         <ToggleGroupItem value="All" aria-label="Toggle All" className={`data-[state=on]:text-white transition-all text-muted-foreground hover:text-foreground hover:bg-muted/80 rounded-lg px-4 active:scale-95 ${activeColor}`}>
-          All
+          {t("filter.all")}
         </ToggleGroupItem>
         <ToggleGroupItem value="Technical" aria-label="Toggle Technical" className={`data-[state=on]:text-white transition-all text-muted-foreground hover:text-foreground hover:bg-muted/80 rounded-lg px-4 active:scale-95 ${activeColor}`}>
-          Technical
+          {t("filter.technical")}
         </ToggleGroupItem>
         <ToggleGroupItem value="Management" aria-label="Toggle Management" className={`data-[state=on]:text-white transition-all text-muted-foreground hover:text-foreground hover:bg-muted/80 rounded-lg px-4 active:scale-95 ${activeColor}`}>
-          Management
+          {t("filter.management")}
         </ToggleGroupItem>
       </ToggleGroup>
     </div>
