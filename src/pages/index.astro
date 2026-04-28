@@ -1,0 +1,25 @@
+---
+import Layout from '../layouts/Layout.astro';
+import * as resume from '../content/resume/data.md';
+import { Card, CardContent } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import PortfolioContent from '@/components/PortfolioContent';
+import PersonaToggle from '@/components/PersonaToggle';
+import FilterGroup from '@/components/FilterGroup';
+import MobileMenu from '@/components/MobileMenu';
+import { Code, Globe, Mail, MapPin, Phone } from 'lucide-react';
+---
+
+<Layout>
+  <PortfolioContent client:load resumeFrontmatter={resume.frontmatter}>
+    <div id="resume-content" class="prose prose-slate dark:prose-invert prose-headings:text-slate-900 dark:prose-headings:text-slate-100 prose-a:text-blue-600 dark:prose-a:text-blue-400 hover:prose-a:text-blue-500 dark:hover:prose-a:text-blue-300 max-w-none 
+         prose-h2:border-b prose-h2:border-border prose-h2:pb-4 prose-h2:mt-16 first:prose-h2:mt-0 prose-h2:text-3xl
+         prose-h3:text-xl prose-h3:font-semibold prose-h3:mt-10 prose-h3:mb-4
+         prose-p:text-slate-600 dark:prose-p:text-slate-300 prose-p:leading-relaxed prose-li:text-slate-600 dark:prose-li:text-slate-300 prose-li:leading-relaxed">
+      <resume.Content />
+    </div>
+  </PortfolioContent>
+</Layout>
+
+
+
