@@ -15,21 +15,32 @@ export default function FilterGroup() {
     if (!container) return
 
     const headers = container.querySelectorAll("h3")
+    const timeouts: number[] = []
     
     headers.forEach((h3) => {
-      // Always use current textContent for filtering to handle language changes
-      const tags = h3.textContent || ""
-      
+      // 1. Extract or Retrieve Categories
+      let categories = h3.getAttribute("data-categories")
+      if (!categories) {
+        const text = h3.textContent || ""
+        const cats = []
+        // Use a more robust check that handles potential whitespace or RTL markers
+        if (text.includes("[Technical]")) cats.push("Technical")
+        if (text.includes("[Management]")) cats.push("Management")
+        categories = cats.join(",")
+        h3.setAttribute("data-categories", categories)
+      }
+
+      // 2. Matching Logic
       let isMatch = false
       if (filter === "All") {
         isMatch = true
-      } else if (filter === "Technical" && tags.includes("[Technical]")) {
-        isMatch = true
-      } else if (filter === "Management" && tags.includes("[Management]")) {
-        isMatch = true
+      } else {
+        const catList = categories.split(",")
+        if (filter === "Technical" && catList.includes("Technical")) isMatch = true
+        if (filter === "Management" && catList.includes("Management")) isMatch = true
       }
 
-      // Transform tags to badges if not already transformed
+      // 3. Transform tags to badges if not already transformed
       if (h3.innerHTML.includes("[Technical]")) {
         h3.innerHTML = h3.innerHTML.replace(
           "[Technical]", 
@@ -52,16 +63,20 @@ export default function FilterGroup() {
         const el = nextElement as HTMLElement;
         if (isMatch) {
             el.style.display = ""
-            setTimeout(() => { el.style.opacity = "1" }, 10)
+            const tid = window.setTimeout(() => { el.style.opacity = "1" }, 10)
+            timeouts.push(tid)
         } else {
             el.style.opacity = "0"
-            setTimeout(() => { el.style.display = "none" }, 400)
+            const tid = window.setTimeout(() => { el.style.display = "none" }, 400)
+            timeouts.push(tid)
         }
         el.style.transition = "opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)"
         nextElement = nextElement.nextElementSibling
       }
     })
-  }, [filter, language]) // Re-run when language changes too
+
+    return () => timeouts.forEach(t => window.clearTimeout(t))
+  }, [filter, language, isRtl, t]) // Re-run when filter or language-related values change
 
   return (
     <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
