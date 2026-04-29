@@ -74,11 +74,13 @@ export default function Terminal() {
           const data = await response.json()
           if (data.reply) {
             newLogs.push({ type: 'output', content: data.reply })
+          } else if (data.message) {
+            newLogs.push({ type: 'error', content: `API Error: ${data.message}` })
           } else {
-             newLogs.push({ type: 'error', content: `Command not found: ${cmd}. Type 'help' for options.` })
+            newLogs.push({ type: 'error', content: isRtl ? `لم يتم العثور على الأمر: ${cmd}` : `Command not found: ${cmd}. Type 'help' for options.` })
           }
         } catch (error) {
-          newLogs.push({ type: 'error', content: "Error connecting to AI assistant." })
+          newLogs.push({ type: 'error', content: isRtl ? "فشل الاتصال بالمساعد الذكي." : "Error connecting to AI assistant." })
         }
         setIsTyping(false)
         setLogs([...newLogs])

@@ -53,7 +53,7 @@ export const POST: APIRoute = async ({ request }) => {
     // Attempt to use gemini-1.5-flash with a fallback to gemini-pro if needed
     let model;
     try {
-      model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+      model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     } catch (e) {
       console.warn('Falling back to gemini-pro due to initialization error');
       model = genAI.getGenerativeModel({ model: "gemini-pro" });
@@ -65,8 +65,11 @@ export const POST: APIRoute = async ({ request }) => {
       
       STRICT RULES:
       1. ONLY answer questions related to Omar's CV.
-      2. Respond in the same language as the user's query (Arabic or English).
+      2. LANGUAGE: You MUST respond in the SAME LANGUAGE as the user's question.
+         - If the question is in Arabic (عربي), you MUST respond in Arabic.
+         - If the question is in English, you MUST respond in English.
       3. Omar is a Techno-Functional Engineer (Software Engineering + Business/SAP).
+      4. If the user asks something outside of Omar's CV, politely explain (in the user's language) that you are specialized in Omar's professional profile only.
       
       CV DATA (ENGLISH):
       ${resumeEn}

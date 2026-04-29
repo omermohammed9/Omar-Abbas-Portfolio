@@ -12,7 +12,6 @@ import { Separator } from "./ui/separator"
 import { Mail, Phone, MapPin, Code, Globe } from "lucide-react"
 import SkillsGrid from "./SkillsGrid"
 import Terminal from "./Terminal"
-import ChatWidget from "./ChatWidget"
 
 
 interface PortfolioContentProps {
@@ -218,7 +217,6 @@ function PortfolioInner({ resumeEnFrontmatter, resumeArFrontmatter, en, ar }: Po
       <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
       
       <Terminal />
-      <ChatWidget />
     </div>
 
   )
