@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Terminal, Briefcase } from "lucide-react"
+import { IconTerminal2, IconBriefcase } from "@tabler/icons-react"
 import { usePersona } from "./PersonaContext"
 import { useLanguage } from "./LanguageContext"
 import { cn } from "@/lib/utils"
@@ -38,7 +38,7 @@ export default function PersonaToggle() {
             persona === "engineer" ? "text-emerald-700 dark:text-emerald-400" : "text-muted-foreground hover:text-foreground"
           )}
         >
-          <Terminal className={cn("w-3.5 h-3.5 transition-transform duration-500", persona === 'engineer' && "scale-110")} />
+          <IconTerminal2 className={cn("w-3.5 h-3.5 transition-transform duration-500", persona === 'engineer' && "scale-110")} />
           <span>{t("persona.engineer")}</span>
         </button>
 
@@ -49,7 +49,7 @@ export default function PersonaToggle() {
             persona === "executive" ? "text-blue-700 dark:text-blue-400" : "text-muted-foreground hover:text-foreground"
           )}
         >
-          <Briefcase className={cn("w-3.5 h-3.5 transition-transform duration-500", persona === 'executive' && "scale-110")} />
+          <IconBriefcase className={cn("w-3.5 h-3.5 transition-transform duration-500", persona === 'executive' && "scale-110")} />
           <span>{t("persona.executive")}</span>
         </button>
       </div>

@@ -1,5 +1,21 @@
 ---
 import '../styles/global.css';
+import { getImage } from "astro:assets";
+import profileImage from "../assets/profile.jpg";
+
+interface Props {
+	title?: string;
+	description?: string;
+	image?: any;
+}
+
+const { 
+	title = "Omar Abbas | Techno-Functional Engineer", 
+	description = "Portfolio of Omar Abbas, a Techno-Functional Engineer bridging Software Engineering and SAP Business Integration.",
+	image = profileImage
+} = Astro.props;
+
+const optimizedImage = await getImage({ src: image, format: 'webp', width: 1200 });
 ---
 <!doctype html>
 <html lang="en">
@@ -7,8 +23,49 @@ import '../styles/global.css';
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" type="image/x-icon" href="/favicon.ico" />
+		<link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Omar Abbas - Portfolio</title>
+		
+		<!-- Primary Meta Tags -->
+		<title>{title}</title>
+		<meta name="title" content={title} />
+		<meta name="description" content={description} />
+		<meta name="author" content="Omar Abbas" />
+		<link rel="canonical" href={Astro.url} />
+
+		<!-- Open Graph / Facebook -->
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content={Astro.url} />
+		<meta property="og:site_name" content="Omar Abbas Portfolio" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={new URL('/og-image.png', Astro.url)} />
+
+		<!-- Twitter -->
+		<meta property="twitter:card" content="summary_large_image" />
+		<meta property="twitter:url" content={Astro.url} />
+		<meta property="twitter:title" content={title} />
+		<meta property="twitter:description" content={description} />
+		<meta property="twitter:image" content={new URL('/og-image.png', Astro.url)} />
+
+		<script type="application/ld+json">
+			{
+			  "@context": "https://schema.org",
+			  "@type": "Person",
+			  "name": "Omar Abbas",
+			  "url": "https://omarabbas.me",
+			  "image": "https://omarabbas.me/og-image.png",
+			  "jobTitle": "Techno-Functional Engineer",
+			  "alumniOf": "University of Khartoum",
+			  "knowsAbout": ["Software Engineering", "SAP Integration", "Java", "React", "Cloud Computing", "AI Strategy"],
+			  "sameAs": [
+				"https://github.com/omermohammed9",
+				"https://linkedin.com/in/omarabbas"
+			  ]
+			}
+		</script>
+
 		<script is:inline>
 			const theme = (() => {
 				if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
@@ -28,7 +85,7 @@ import '../styles/global.css';
 			window.localStorage.setItem('theme', theme);
 		</script>
 	</head>
-	<body>
+	<body class="min-h-screen">
 		<slot />
 	</body>
 </html>

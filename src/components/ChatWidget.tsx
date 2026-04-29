@@ -1,6 +1,6 @@
 import * as React from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { MessageSquare, X, Send, User, Bot, Loader2 } from "lucide-react"
+import { IconMessage2, IconX, IconSend, IconUser, IconRobot, IconLoader2 } from "@tabler/icons-react"
 import { usePersona } from "./PersonaContext"
 import { useLanguage } from "./LanguageContext"
 import { cn } from "@/lib/utils"
@@ -77,7 +77,7 @@ export default function ChatWidget() {
           isOpen && "scale-0"
         )}
       >
-        <MessageSquare className="w-6 h-6" />
+        <IconMessage2 className="w-6 h-6" />
       </button>
 
       <AnimatePresence>
@@ -96,7 +96,7 @@ export default function ChatWidget() {
             <div className="p-5 bg-primary text-primary-foreground flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
-                  <Bot className="w-6 h-6" />
+                  <IconRobot className="w-6 h-6" />
                 </div>
                 <div>
                   <h3 className="font-bold text-sm leading-none">Ask Omar</h3>
@@ -104,7 +104,7 @@ export default function ChatWidget() {
                 </div>
               </div>
               <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-white/10 rounded-full transition-colors">
-                <X className="w-5 h-5" />
+                <IconX className="w-5 h-5" />
               </button>
             </div>
 
@@ -120,7 +120,7 @@ export default function ChatWidget() {
                       "w-8 h-8 rounded-full shrink-0 flex items-center justify-center",
                       msg.role === 'user' ? "bg-muted" : "bg-primary/10 text-primary"
                     )}>
-                      {msg.role === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
+                      {msg.role === 'user' ? <IconUser className="w-4 h-4" /> : <IconRobot className="w-4 h-4" />}
                     </div>
                     <div className={cn(
                       "p-3 rounded-2xl text-xs leading-relaxed",
@@ -133,10 +133,10 @@ export default function ChatWidget() {
                 {isTyping && (
                   <div className="flex gap-3">
                     <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
-                      <Bot className="w-4 h-4" />
+                      <IconRobot className="w-4 h-4" />
                     </div>
                     <div className="p-3 rounded-2xl bg-primary/5 border border-primary/10 rounded-tl-none flex items-center gap-2">
-                      <Loader2 className="w-3 h-3 animate-spin" />
+                      <IconLoader2 className="w-3 h-3 animate-spin" />
                       <span className="text-[10px] italic">Thinking...</span>
                     </div>
                   </div>
@@ -168,7 +168,7 @@ export default function ChatWidget() {
                 className="p-2 bg-primary text-primary-foreground rounded-xl disabled:opacity-50 active:scale-95 transition-transform"
                 aria-label="Send message"
               >
-                <Send className="w-4 h-4" />
+                <IconSend className="w-4 h-4" />
               </button>
             </form>
           </motion.div>

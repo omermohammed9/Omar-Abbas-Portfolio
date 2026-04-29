@@ -140,11 +140,16 @@
     @apply font-arabic;
   }
 
+  /* Accessibility: High-contrast focus rings */
+  :focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background transition-shadow duration-200;
+  }
+
   .font-arabic {
     font-family: 'IBM Plex Sans Arabic', sans-serif !important;
   }
 
-  /* Engineer Persona Overrides */
+  /* Engineer Persona Overrides (Matrix/Technical look) */
   html.persona-engineer {
     --primary: oklch(0.7 0.2 160); /* Emerald */
     --primary-foreground: oklch(0.145 0 0);
@@ -153,7 +158,7 @@
     --accent: oklch(0.7 0.2 160 / 15%);
     --accent-foreground: oklch(0.7 0.2 160);
     --ring: oklch(0.7 0.2 160 / 50%);
-    --radius: 0.25rem; /* Sharper corners for a technical feel */
+    --radius: 0.125rem; /* Industrial sharp corners */
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
   }
   
@@ -161,15 +166,28 @@
     font-family: 'IBM Plex Sans Arabic', sans-serif !important;
   }
 
-  /* Executive Persona Overrides */
+  /* Executive Persona Overrides (Premium/Corporate look) */
   html.persona-executive {
-    --primary: oklch(0.5 0.2 250); /* Royal Blue */
+    --primary: oklch(0.6 0.1 240); /* Deep Slate Blue */
     --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --accent: oklch(0.5 0.2 250 / 10%);
-    --accent-foreground: oklch(0.5 0.2 250);
-    --radius: 1.5rem; /* Softer, premium rounded corners */
+    --secondary: oklch(0.9 0.02 240);
+    --secondary-foreground: oklch(0.2 0.05 240);
+    --accent: oklch(0.6 0.1 240 / 10%);
+    --accent-foreground: oklch(0.6 0.1 240);
+    --radius: 1.25rem; /* Modern rounded corners */
+  }
+
+  /* Glassmorphism Utilities */
+  .glass {
+    @apply bg-background/60 backdrop-blur-md border border-border/50 shadow-xl;
+  }
+  
+  .glass-dark {
+    @apply bg-background/40 backdrop-blur-xl border border-white/10 shadow-2xl;
+  }
+
+  .glass-premium {
+    @apply bg-background/30 backdrop-blur-2xl border border-border/40 shadow-2xl ring-1 ring-white/10;
   }
 
   /* Dynamic Class Swaps */
@@ -187,6 +205,7 @@
   html.persona-executive .bg-emerald-500 { background-color: var(--color-blue-500) !important; }
   html.persona-executive .bg-emerald-600 { background-color: var(--color-blue-600) !important; }
   html.persona-executive .border-emerald-500 { border-color: var(--color-blue-500) !important; }
+  html.persona-executive .shadow-emerald-900\/20 { --tw-shadow-color: rgb(30 58 138 / 0.2) !important; }
 }
 .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
 .pt-safe { padding-top: env(safe-area-inset-top); }
@@ -206,8 +225,8 @@
 .animate-fade-in { animation: fade-in 0.3s ease-out; }
 
 /* Hide the static Core Competencies section from Markdown output since we use the interactive SkillsGrid */
-#resume-content h2:nth-of-type(2), 
-#resume-content h2:nth-of-type(2) + ul {
+#resume-content h2:nth-of-type(3), 
+#resume-content h2:nth-of-type(3) + ul {
     display: none;
 }
 

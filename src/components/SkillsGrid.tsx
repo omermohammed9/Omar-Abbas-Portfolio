@@ -1,4 +1,5 @@
 import * as React from "react"
+import { motion } from "framer-motion"
 import { skills } from "@/lib/skills-data"
 import SkillCard from "./SkillCard"
 import { useLanguage } from "./LanguageContext"
@@ -13,11 +14,11 @@ export default function SkillsGrid() {
         <div className="h-px flex-1 bg-border/50"></div>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {skills.map((skill, index) => (
           <SkillCard key={index} skill={skill} />
         ))}
-      </div>
+      </motion.div>
     </div>
   )
 }

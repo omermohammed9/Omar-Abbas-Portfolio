@@ -1,5 +1,5 @@
 import * as React from "react"
-import { User, Briefcase, Settings } from "lucide-react"
+import { IconUser, IconBriefcase, IconSettings, IconRocket } from "@tabler/icons-react"
 import { useLanguage } from "./LanguageContext"
 
 interface BottomNavProps {
@@ -11,9 +11,10 @@ export default function BottomNav({ activeTab, setActiveTab }: BottomNavProps) {
   const { t, isRtl } = useLanguage()
 
   const tabs = [
-    { id: "profile", label: t("nav.home"), icon: User },
-    { id: "experience", label: t("nav.experience"), icon: Briefcase },
-    { id: "settings", label: t("nav.preferences"), icon: Settings },
+    { id: "profile", label: t("nav.home"), icon: IconUser },
+    { id: "experience", label: t("nav.experience"), icon: IconBriefcase },
+    { id: "services", label: t("nav.services"), icon: IconRocket },
+    { id: "settings", label: t("nav.preferences"), icon: IconSettings },
   ]
 
   return (

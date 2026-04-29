@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Sun, Moon } from "lucide-react"
+import { IconSun, IconMoon } from "@tabler/icons-react"
 import { Button } from "@/components/ui/button"
 
 export default function ThemeToggle() {
@@ -36,8 +36,8 @@ export default function ThemeToggle() {
       aria-label="Toggle theme"
     >
       <div className="relative size-full flex items-center justify-center">
-        <Sun className={`absolute h-4 w-4 transition-all duration-500 ${theme === 'dark' ? 'scale-0 rotate-90 opacity-0' : 'scale-100 rotate-0 opacity-100 text-yellow-500'}`} />
-        <Moon className={`absolute h-4 w-4 transition-all duration-500 ${theme === 'light' ? 'scale-0 -rotate-90 opacity-0' : 'scale-100 rotate-0 opacity-100 text-blue-400'}`} />
+        <IconSun className={`absolute h-4 w-4 transition-all duration-500 ${theme === 'dark' ? 'scale-0 rotate-90 opacity-0' : 'scale-100 rotate-0 opacity-100 text-yellow-500'}`} />
+        <IconMoon className={`absolute h-4 w-4 transition-all duration-500 ${theme === 'light' ? 'scale-0 -rotate-90 opacity-0' : 'scale-100 rotate-0 opacity-100 text-blue-400'}`} />
       </div>
     </Button>
   )

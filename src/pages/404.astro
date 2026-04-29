@@ -1,0 +1,92 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="404: Page Not Found | Omar Abbas">
+  <main class="min-h-screen flex items-center justify-center p-6 bg-background relative overflow-hidden transition-all duration-500">
+    <!-- Abstract Background Elements -->
+    <div class="absolute top-0 left-0 w-full h-full pointer-events-none opacity-20">
+      <div class="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-primary/20 blur-[120px] rounded-full animate-pulse"></div>
+      <div class="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-emerald-500/10 blur-[120px] rounded-full animate-pulse" style="animation-delay: 2s;"></div>
+    </div>
+
+    <div class="relative z-10 glass-premium max-w-2xl w-full p-12 text-center rounded-3xl border border-white/10 backdrop-blur-2xl">
+      <div class="mb-8 inline-flex items-center justify-center w-24 h-24 rounded-2xl bg-primary/10 border border-primary/20 animate-bounce">
+        <span class="text-5xl font-bold text-primary">404</span>
+      </div>
+      
+      <h1 id="error-title" class="text-4xl md:text-5xl font-bold tracking-tight mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-emerald-500">
+        System Desync Detected
+      </h1>
+      
+      <p id="error-desc" class="text-lg text-muted-foreground mb-10 max-w-md mx-auto">
+        The requested module could not be located in the current environment. 
+        It seems you've wandered into an unmapped sector.
+      </p>
+
+      <!-- AI Assistant Mention -->
+      <div class="mb-10 p-4 rounded-2xl bg-primary/5 border border-primary/10 flex items-center gap-4 text-left group hover:bg-primary/10 transition-all cursor-default">
+        <div class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><path d="m12 8-9.04 9.06a2.82 2.82 0 1 0 3.98 3.98L16 12"/><circle cx="17" cy="7" r="5"/></svg>
+        </div>
+        <div>
+          <h3 id="ai-title" class="font-semibold text-sm text-primary uppercase tracking-wider">AI Assistant Recommendation</h3>
+          <p id="ai-desc" class="text-sm text-muted-foreground">My AI agent suggests you return to the home screen to find what you're looking for.</p>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a 
+          href="/" 
+          id="btn-home"
+          class="px-8 py-3 rounded-xl bg-primary text-primary-foreground font-medium hover:scale-105 transition-all shadow-lg shadow-primary/20"
+        >
+          Return to Base
+        </a>
+        <button 
+          onclick="history.back()" 
+          id="btn-back"
+          class="px-8 py-3 rounded-xl glass hover:bg-muted/50 font-medium transition-all"
+        >
+          Previous State
+        </button>
+      </div>
+
+      <div class="mt-12 pt-8 border-t border-border/50">
+        <div class="font-mono text-xs text-muted-foreground/60 uppercase tracking-widest flex items-center justify-center gap-4">
+          <span id="status-text">Status: Offline</span>
+          <span class="w-1 h-1 bg-muted-foreground/30 rounded-full"></span>
+          <span id="loc-text">Loc: Uncharted_Route</span>
+          <span class="w-1 h-1 bg-muted-foreground/30 rounded-full"></span>
+          <span>ID: {Math.random().toString(36).substring(7).toUpperCase()}</span>
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<script is:inline>
+  // Simple language detection for static 404 page
+  const savedLang = localStorage.getItem('portfolio-language') || 'en';
+  const isAr = savedLang === 'ar';
+  
+  if (isAr) {
+    document.documentElement.dir = 'rtl';
+    document.documentElement.classList.add('font-arabic');
+    
+    document.getElementById('error-title').textContent = 'تم اكتشاف عدم مزامنة للنظام';
+    document.getElementById('error-desc').textContent = 'لم يتم العثور على الوحدة المطلوبة في البيئة الحالية. يبدو أنك دخلت قطاعاً غير مخطط له.';
+    document.getElementById('ai-title').textContent = 'توصية المساعد الذكي';
+    document.getElementById('ai-desc').textContent = 'يقترح وكيلي الذكي العودة إلى الشاشة الرئيسية للعثور على ما تبحث عنه.';
+    document.getElementById('btn-home').textContent = 'العودة للقاعدة';
+    document.getElementById('btn-back').textContent = 'الحالة السابقة';
+    document.getElementById('status-text').textContent = 'الحالة: غير متصل';
+    document.getElementById('loc-text').textContent = 'الموقع: مسار_غير_معروف';
+  }
+</script>
+
+<style>
+  main {
+    background-image: radial-gradient(circle at center, var(--background-gradient) 0%, transparent 70%);
+  }
+</style>

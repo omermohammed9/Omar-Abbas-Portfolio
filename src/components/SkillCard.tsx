@@ -4,7 +4,7 @@ import { type Skill } from "@/lib/skills-data"
 import { usePersona } from "./PersonaContext"
 import { useLanguage } from "./LanguageContext"
 import { cn } from "@/lib/utils"
-import * as LucideIcons from "lucide-react"
+import * as TablerIcons from "@tabler/icons-react"
 
 interface SkillCardProps {
   skill: Skill;
@@ -12,11 +12,11 @@ interface SkillCardProps {
 
 export default function SkillCard({ skill }: SkillCardProps) {
   const { persona } = usePersona()
-  const { isRtl } = useLanguage()
+  const { isRtl, t } = useLanguage()
   const [isFlipped, setIsFlipped] = React.useState(false)
   
   // Choose icon dynamically
-  const IconComponent = (LucideIcons as any)[skill.icon] || LucideIcons.Code
+  const IconComponent = (TablerIcons as any)[`Icon${skill.icon}`] || TablerIcons.IconCode
 
   // Auto-flip based on persona, but allow manual override
   React.useEffect(() => {
@@ -24,7 +24,8 @@ export default function SkillCard({ skill }: SkillCardProps) {
   }, [persona])
 
   return (
-    <div 
+    <motion.div 
+      layout
       className="perspective-1000 w-full h-40 cursor-pointer group"
       onClick={() => setIsFlipped(!isFlipped)}
       onMouseEnter={() => persona === 'engineer' && setIsFlipped(true)}
@@ -41,11 +42,11 @@ export default function SkillCard({ skill }: SkillCardProps) {
                 <div className="p-2 rounded-lg bg-primary/10 text-primary">
                     <IconComponent className="w-5 h-5" />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">Technical</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">{t("skill.technical")}</span>
             </div>
             <div>
-                <h3 className="font-bold text-foreground text-sm mb-1">{skill.name}</h3>
-                <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">{skill.technicalDesc}</p>
+                <h3 className="font-bold text-foreground text-sm mb-1">{isRtl ? skill.nameAr : skill.name}</h3>
+                <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">{isRtl ? skill.technicalDescAr : skill.technicalDesc}</p>
             </div>
             {/* Ambient Background Tech Pattern */}
             <div className="absolute -bottom-4 -right-4 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
@@ -62,20 +63,20 @@ export default function SkillCard({ skill }: SkillCardProps) {
         >
             <div className="flex items-center justify-between">
                 <div className="p-2 rounded-lg bg-primary/20 text-primary">
-                    <LucideIcons.TrendingUp className="w-5 h-5" />
+                    <TablerIcons.IconTrendingUp className="w-5 h-5" />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-primary/70">Business Value</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-primary/70">{t("skill.business")}</span>
             </div>
             <div>
-                <h3 className="font-bold text-primary text-sm mb-1">{skill.name}</h3>
-                <p className="text-xs text-foreground/80 leading-relaxed italic">"{skill.businessValue}"</p>
+                <h3 className="font-bold text-primary text-sm mb-1">{isRtl ? skill.nameAr : skill.name}</h3>
+                <p className="text-xs text-foreground/80 leading-relaxed italic">"{isRtl ? skill.businessValueAr : skill.businessValue}"</p>
             </div>
              {/* Ambient Background Business Pattern */}
              <div className="absolute -bottom-2 -right-2 opacity-[0.1] text-primary">
-                <LucideIcons.BarChart3 className="w-16 h-16 -rotate-12" />
+                <TablerIcons.IconChartBar className="w-16 h-16 -rotate-12" />
             </div>
         </div>
       </motion.div>
-    </div>
+    </motion.div>
   )
 }

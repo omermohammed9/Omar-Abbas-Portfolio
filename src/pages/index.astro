@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import * as resumeEn from '../content/resume/en.md';
 import * as resumeAr from '../content/resume/ar.md';
 import PortfolioContent from '@/components/PortfolioContent';
+import profileImage from '../assets/profile.jpg';
 ---
 
 <Layout title="Omar Abbas | Portfolio">
@@ -10,6 +11,7 @@ import PortfolioContent from '@/components/PortfolioContent';
     client:load 
     resumeEnFrontmatter={resumeEn.frontmatter}
     resumeArFrontmatter={resumeAr.frontmatter}
+    profileImage={profileImage}
   >
     <resumeEn.Content slot="en" />
     <resumeAr.Content slot="ar" />

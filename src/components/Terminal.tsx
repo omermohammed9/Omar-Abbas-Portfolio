@@ -1,6 +1,6 @@
 import * as React from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Terminal as TerminalIcon, X, Minimize2, Maximize2, Send } from "lucide-react"
+import { IconTerminal2, IconX, IconMinus, IconMaximize, IconSend } from "@tabler/icons-react"
 import { usePersona } from "./PersonaContext"
 import { useLanguage } from "./LanguageContext"
 import { cn } from "@/lib/utils"
@@ -18,10 +18,32 @@ export default function Terminal() {
   const [isMinimized, setIsMinimized] = React.useState(false)
   const [input, setInput] = React.useState("")
   const [isTyping, setIsTyping] = React.useState(false)
+  const [isServiceAvailable, setIsServiceAvailable] = React.useState(true)
+  const [retryInterval, setRetryInterval] = React.useState(60000)
+  const [history, setHistory] = React.useState<{role: 'user' | 'model', parts: {text: string}[]}[]>([])
   const [logs, setLogs] = React.useState<Log[]>([
     { type: 'output', content: t("terminal.welcome") }
   ])
   const scrollRef = React.useRef<HTMLDivElement>(null)
+
+  // Initial and periodic service check
+  React.useEffect(() => {
+    const checkService = async () => {
+      try {
+        const response = await fetch('/api/chat')
+        const data = await response.json()
+        setIsServiceAvailable(!!data.isServiceAvailable)
+        // Reset retry interval on success
+        if (data.isServiceAvailable) setRetryInterval(60000)
+      } catch (e) {
+        setIsServiceAvailable(false)
+      }
+    }
+
+    checkService()
+    const interval = setInterval(checkService, retryInterval)
+    return () => clearInterval(interval)
+  }, [retryInterval])
 
   const handleCommand = async (cmd: string) => {
     const cleanCmd = cmd.toLowerCase().trim()
@@ -33,30 +55,35 @@ export default function Terminal() {
 
     switch (cleanCmd) {
       case 'help':
-        newLogs.push({ type: 'output', content: 'Available commands: help, clear, skills, bio, persona [engineer|executive], exit. You can also ask me anything about my CV!' })
+        newLogs.push({ type: 'output', content: isRtl ? 'الأوامر المتاحة: help, clear, skills, bio, persona [engineer|executive], models, exit. يمكنك أيضاً سؤالي عن سيرتي الذاتية!' : 'Available commands: help, clear, skills, bio, persona [engineer|executive], models, exit. You can also ask me anything about my CV!' })
         setLogs([...newLogs])
         break
       case 'clear':
         setLogs([])
+        setHistory([])
         return
       case 'skills':
-        newLogs.push({ type: 'output', content: 'Technical: Java, Node.js, React, Nuxt, SAP, SQL, AI Prompting...' })
+        newLogs.push({ type: 'output', content: isRtl ? 'المهارات التقنية: جافا، نود جي اس، رياكت، نكست، ساب، إس كيو إل، هندسة الأوامر...' : 'Technical: Java, Node.js, React, Nuxt, SAP, SQL, AI Prompting...' })
         setLogs([...newLogs])
         break
       case 'bio':
-        newLogs.push({ type: 'output', content: 'Omar Abbas: Techno-Functional Engineer bridging Code and Business.' })
+        newLogs.push({ type: 'output', content: isRtl ? 'عمر عباس: مهندس تقني وظيفي يجمع بين البرمجة وإدارة الأعمال.' : 'Omar Abbas: Techno-Functional Engineer bridging Code and Business.' })
         setLogs([...newLogs])
         break
       case 'persona engineer':
       case 'persona e':
         setPersona('engineer')
-        newLogs.push({ type: 'output', content: 'Persona switched to: ENGINEER. Theme updated.' })
+        newLogs.push({ type: 'output', content: isRtl ? 'تم تغيير الشخصية إلى: مهندس. تم تحديث المظهر.' : 'Persona switched to: ENGINEER. Theme updated.' })
         setLogs([...newLogs])
         break
       case 'persona executive':
       case 'persona x':
         setPersona('executive')
-        newLogs.push({ type: 'output', content: 'Persona switched to: EXECUTIVE. Theme updated.' })
+        newLogs.push({ type: 'output', content: isRtl ? 'تم تغيير الشخصية إلى: تنفيذي. تم تحديث المظهر.' : 'Persona switched to: EXECUTIVE. Theme updated.' })
+        setLogs([...newLogs])
+        break
+      case 'models':
+        newLogs.push({ type: 'output', content: isRtl ? 'نماذج Gemini المتاحة: 2.5 Flash, 2.0 Flash, 2.5 Pro. يتم التبديل بينها تلقائياً عند الحاجة.' : 'Available Gemini Models: 2.5 Flash, 2.0 Flash, 2.5 Pro. Auto-switching enabled.' })
         setLogs([...newLogs])
         break
       case 'exit':
@@ -68,14 +95,33 @@ export default function Terminal() {
         try {
           const response = await fetch('/api/chat', {
             method: 'POST',
-            body: JSON.stringify({ message: cmd, language }),
+            body: JSON.stringify({ 
+              message: cmd, 
+              language,
+              history: history.slice(-6) // Send last 6 turns for context
+            }),
             headers: { 'Content-Type': 'application/json' }
           })
           const data = await response.json()
+          
+          if (data.isFatal) {
+            setIsServiceAvailable(false)
+            setIsOpen(false)
+            if (data.retryAfter) {
+              setRetryInterval(data.retryAfter)
+            }
+          }
+
           if (data.reply) {
             newLogs.push({ type: 'output', content: data.reply })
+            // Update history
+            setHistory(prev => [
+              ...prev,
+              { role: 'user', parts: [{ text: cmd }] },
+              { role: 'model', parts: [{ text: data.reply }] }
+            ])
           } else if (data.message) {
-            newLogs.push({ type: 'error', content: `API Error: ${data.message}` })
+             newLogs.push({ type: 'error', content: isRtl ? `خطأ في الاتصال: ${data.message}` : `API Error: ${data.message}` })
           } else {
             newLogs.push({ type: 'error', content: isRtl ? `لم يتم العثور على الأمر: ${cmd}` : `Command not found: ${cmd}. Type 'help' for options.` })
           }
@@ -93,6 +139,8 @@ export default function Terminal() {
     }
   }, [logs, isTyping])
 
+  if (!isServiceAvailable) return null;
+
   return (
     <>
       {/* Floating Toggle Button */}
@@ -104,7 +152,7 @@ export default function Terminal() {
           isOpen && "scale-0"
         )}
       >
-        <TerminalIcon className="w-6 h-6" />
+        <IconTerminal2 className="w-6 h-6" />
       </button>
 
       <AnimatePresence>
@@ -130,15 +178,15 @@ export default function Terminal() {
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-2 bg-muted/50 border-b border-border cursor-move">
               <div className="flex items-center gap-2">
-                <TerminalIcon className="w-3.5 h-3.5 text-emerald-500" />
+                <IconTerminal2 className="w-3.5 h-3.5 text-emerald-500" />
                 <span className="text-emerald-500 font-bold uppercase tracking-tighter">omarterm v1.1.0</span>
               </div>
               <div className="flex items-center gap-2">
                 <button onClick={() => setIsMinimized(!isMinimized)} className="p-1 hover:bg-accent rounded">
-                  {isMinimized ? <Maximize2 className="w-3 h-3" /> : <Minimize2 className="w-3 h-3" />}
+                  {isMinimized ? <IconMaximize className="w-3 h-3" /> : <IconMinus className="w-3 h-3" />}
                 </button>
                 <button onClick={() => setIsOpen(false)} className="p-1 hover:bg-destructive/20 text-destructive rounded">
-                  <X className="w-3 h-3" />
+                  <IconX className="w-3 h-3" />
                 </button>
               </div>
             </div>
@@ -187,7 +235,7 @@ export default function Terminal() {
                     dir={isRtl ? "rtl" : "ltr"}
                   />
                   <button type="submit" disabled={isTyping} aria-label={isRtl ? "إرسال" : "Send"}>
-                    <Send className={cn("w-3 h-3 transition-colors", isTyping ? "text-muted" : "text-emerald-500/50 hover:text-emerald-500")} />
+                    <IconSend className={cn("w-3 h-3 transition-colors", isTyping ? "text-muted" : "text-emerald-500/50 hover:text-emerald-500")} />
                   </button>
                 </form>
               </>
