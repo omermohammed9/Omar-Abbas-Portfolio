@@ -146,9 +146,14 @@
 
   /* Engineer Persona Overrides */
   html.persona-engineer {
-    --primary: oklch(0.7 0.2 160);
+    --primary: oklch(0.7 0.2 160); /* Emerald */
     --primary-foreground: oklch(0.145 0 0);
+    --secondary: oklch(0.25 0.05 160);
+    --secondary-foreground: oklch(0.985 0 0);
+    --accent: oklch(0.7 0.2 160 / 15%);
+    --accent-foreground: oklch(0.7 0.2 160);
     --ring: oklch(0.7 0.2 160 / 50%);
+    --radius: 0.25rem; /* Sharper corners for a technical feel */
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
   }
   
@@ -156,6 +161,18 @@
     font-family: 'IBM Plex Sans Arabic', sans-serif !important;
   }
 
+  /* Executive Persona Overrides */
+  html.persona-executive {
+    --primary: oklch(0.5 0.2 250); /* Royal Blue */
+    --primary-foreground: oklch(0.985 0 0);
+    --secondary: oklch(0.97 0 0);
+    --secondary-foreground: oklch(0.205 0 0);
+    --accent: oklch(0.5 0.2 250 / 10%);
+    --accent-foreground: oklch(0.5 0.2 250);
+    --radius: 1.5rem; /* Softer, premium rounded corners */
+  }
+
+  /* Dynamic Class Swaps */
   html.persona-engineer .text-blue-400 { color: var(--color-emerald-400) !important; }
   html.persona-engineer .text-blue-500 { color: var(--color-emerald-500) !important; }
   html.persona-engineer .bg-blue-500 { background-color: var(--color-emerald-500) !important; }
@@ -164,9 +181,21 @@
   html.persona-engineer .ring-blue-500 { --tw-ring-color: var(--color-emerald-500) !important; }
   html.persona-engineer .shadow-blue-900\/20 { --tw-shadow-color: rgb(6 78 59 / 0.2) !important; }
   html.persona-engineer .prose-a\:text-blue-400 { color: var(--color-emerald-400) !important; }
+
+  html.persona-executive .text-emerald-400 { color: var(--color-blue-400) !important; }
+  html.persona-executive .text-emerald-500 { color: var(--color-blue-500) !important; }
+  html.persona-executive .bg-emerald-500 { background-color: var(--color-blue-500) !important; }
+  html.persona-executive .bg-emerald-600 { background-color: var(--color-blue-600) !important; }
+  html.persona-executive .border-emerald-500 { border-color: var(--color-blue-500) !important; }
 }
 .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
 .pt-safe { padding-top: env(safe-area-inset-top); }
+
+.perspective-1000 { perspective: 1000px; }
+.preserve-3d { transform-style: preserve-3d; }
+.backface-hidden { backface-visibility: hidden; }
+.rotate-y-180 { transform: rotateY(180deg); }
+.rotate-y--180 { transform: rotateY(-180deg); }
 
 @keyframes slide-up { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 @keyframes slide-in-right { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
@@ -175,3 +204,10 @@
 .animate-slide-up { animation: slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
 .animate-slide-in-right { animation: slide-in-right 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
 .animate-fade-in { animation: fade-in 0.3s ease-out; }
+
+/* Hide the static Core Competencies section from Markdown output since we use the interactive SkillsGrid */
+#resume-content h2:nth-of-type(2), 
+#resume-content h2:nth-of-type(2) + ul {
+    display: none;
+}
+

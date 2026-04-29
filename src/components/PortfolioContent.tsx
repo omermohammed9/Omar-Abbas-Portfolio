@@ -10,6 +10,10 @@ import MobileMenu from "./MobileMenu"
 import { Card, CardContent } from "./ui/card"
 import { Separator } from "./ui/separator"
 import { Mail, Phone, MapPin, Code, Globe } from "lucide-react"
+import SkillsGrid from "./SkillsGrid"
+import Terminal from "./Terminal"
+import ChatWidget from "./ChatWidget"
+
 
 interface PortfolioContentProps {
   resumeEnFrontmatter: any
@@ -176,9 +180,11 @@ function PortfolioInner({ resumeEnFrontmatter, resumeArFrontmatter, en, ar }: Po
                       prose-p:text-slate-600 dark:prose-p:text-slate-300 prose-p:leading-relaxed prose-li:text-slate-600 dark:prose-li:text-slate-300 prose-li:leading-relaxed ${isRtl ? 'font-arabic' : ''}`}>
                     {content}
                   </div>
+                  <SkillsGrid />
                 </CardContent>
               </Card>
            </div>
+
 
            {/* Settings Tab (Mobile Only) */}
            <div className={`${activeTab === 'settings' ? 'block animate-slide-up' : 'hidden'} lg:hidden`}>
@@ -210,7 +216,11 @@ function PortfolioInner({ resumeEnFrontmatter, resumeArFrontmatter, en, ar }: Po
       </div>
 
       <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
+      
+      <Terminal />
+      <ChatWidget />
     </div>
+
   )
 }
 

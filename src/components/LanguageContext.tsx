@@ -32,6 +32,10 @@ const translations = {
     "github": "GitHub",
     "linkedin": "LinkedIn",
     "site.title": "Omar Abbas | Portfolio",
+    "resume.skills": "Core Competencies",
+    "terminal.welcome": "Welcome to Omar's Interactive Terminal. Type 'help' to begin.",
+    "chat.welcome": "Hi! I'm Omar's AI assistant. Ask me anything about his experience!",
+    "chat.placeholder": "Type a question...",
   },
   ar: {
     "nav.preferences": "التفضيلات",
@@ -55,6 +59,10 @@ const translations = {
     "github": "جيت هاب",
     "linkedin": "لينكد إن",
     "site.title": "عمر عباس | معرض الأعمال",
+    "resume.skills": "الكفاءات الأساسية",
+    "terminal.welcome": "مرحباً بك في محطة عمر التفاعلية. اكتب 'help' للبدء.",
+    "chat.welcome": "مرحباً! أنا المساعد الذكي الخاص بعمر. اسألني أي شيء عن خبرته!",
+    "chat.placeholder": "اكتب سؤالاً...",
   }
 }
 
