@@ -170,8 +170,13 @@ export default function Terminal() {
                   onSubmit={(e) => { e.preventDefault(); handleCommand(input) }}
                   className="p-3 bg-muted/30 border-t border-border flex items-center gap-2"
                 >
+                  <label htmlFor="terminal-input" className="sr-only">
+                    {isRtl ? "مدخلات الطرفية" : "Terminal input"}
+                  </label>
                   <span className="text-emerald-500">$</span>
                   <input 
+                    id="terminal-input"
+                    name="command"
                     autoFocus
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
@@ -179,7 +184,7 @@ export default function Terminal() {
                     className="flex-1 bg-transparent border-none outline-none text-foreground placeholder:text-muted-foreground"
                     dir={isRtl ? "rtl" : "ltr"}
                   />
-                  <button type="submit" disabled={isTyping}>
+                  <button type="submit" disabled={isTyping} aria-label={isRtl ? "إرسال" : "Send"}>
                     <Send className={cn("w-3 h-3 transition-colors", isTyping ? "text-muted" : "text-emerald-500/50 hover:text-emerald-500")} />
                   </button>
                 </form>

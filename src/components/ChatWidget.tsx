@@ -149,16 +149,24 @@ export default function ChatWidget() {
               onSubmit={(e) => { e.preventDefault(); handleSend() }}
               className="p-4 bg-muted/30 border-t border-border flex items-center gap-2"
             >
-              <input 
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder={t("chat.placeholder")}
-                className="flex-1 bg-background border border-border rounded-xl px-4 py-2 text-xs focus:ring-2 focus:ring-primary/20 outline-none transition-all"
-              />
+              <div className="flex-1 relative">
+                <label htmlFor="chat-input" className="sr-only">
+                  {t("chat.placeholder")}
+                </label>
+                <input 
+                  id="chat-input"
+                  name="message"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder={t("chat.placeholder")}
+                  className="w-full bg-background border border-border rounded-xl px-4 py-2 text-xs focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                />
+              </div>
               <button 
                 type="submit"
                 disabled={!input.trim()}
                 className="p-2 bg-primary text-primary-foreground rounded-xl disabled:opacity-50 active:scale-95 transition-transform"
+                aria-label="Send message"
               >
                 <Send className="w-4 h-4" />
               </button>
