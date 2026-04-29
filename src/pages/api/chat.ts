@@ -2,34 +2,50 @@ import type { APIRoute } from 'astro';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // Use import.meta.glob to bundle the resume content into the serverless function at build time
-// This avoids runtime file system issues on Netlify/Vercel
 const resumeFiles = import.meta.glob('../../content/resume/*.md', { query: '?raw', import: 'default', eager: true });
+
+export const GET: APIRoute = async () => {
+  const apiKey = (import.meta.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY);
+  return new Response(JSON.stringify({
+    status: 'Chat API is active',
+    diagnostics: {
+      hasApiKey: !!apiKey,
+      apiKeyLength: apiKey?.length || 0,
+      availableResumes: Object.keys(resumeFiles)
+    }
+  }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+};
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    const { message, language = 'en' } = await request.json();
+    const body = await request.json().catch(() => ({}));
+    const { message, language = 'en' } = body;
 
     if (!message) {
       return new Response(JSON.stringify({ error: 'Message is required' }), { status: 400 });
     }
 
-    // Try both import.meta.env and process.env for maximum compatibility with Netlify
+    // Robust API key retrieval
     const apiKey = (import.meta.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY)?.trim();
     
     if (!apiKey) {
-      console.error('GEMINI_API_KEY is missing from environment variables');
+      console.error('API Error: GEMINI_API_KEY is missing');
       return new Response(JSON.stringify({ 
-        error: 'API Key not configured',
-        message: 'Please ensure GEMINI_API_KEY is set in your Netlify environment variables.'
+        error: 'Configuration Error',
+        message: 'GEMINI_API_KEY is not set in the environment.'
       }), { status: 500 });
     }
 
-    // Get CV Content from bundled files
+    // Get CV Content
     const resumeEn = (resumeFiles['../../content/resume/en.md'] as string) || '';
     const resumeAr = (resumeFiles['../../content/resume/ar.md'] as string) || '';
     
     if (!resumeEn && !resumeAr) {
-      console.warn('Warning: Resume content files were not found during bundling.');
+      console.error('API Error: Resume files not found in bundle');
+      return new Response(JSON.stringify({ 
+        error: 'Content Error',
+        message: 'CV data could not be loaded.'
+      }), { status: 500 });
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);
@@ -41,10 +57,8 @@ export const POST: APIRoute = async ({ request }) => {
       
       STRICT RULES:
       1. ONLY answer questions related to Omar's CV.
-      2. If a user asks about anything unrelated to Omar (e.g., general knowledge, math, other people, general help), respond politely in the user's language that you are specialized ONLY in Omar's professional profile.
-      3. Answer in the same language as the user's query (Arabic or English).
-      4. Keep responses concise and "terminal-like" (direct and informative).
-      5. Omar is a Techno-Functional Engineer (Software Engineering + Business/SAP).
+      2. Respond in the same language as the user's query (Arabic or English).
+      3. Omar is a Techno-Functional Engineer (Software Engineering + Business/SAP).
       
       CV DATA (ENGLISH):
       ${resumeEn}
@@ -62,17 +76,14 @@ export const POST: APIRoute = async ({ request }) => {
 
     return new Response(JSON.stringify({ reply: responseText }), {
       status: 200,
-      headers: { 
-        'Content-Type': 'application/json',
-        'Cache-Control': 'no-store'
-      }
+      headers: { 'Content-Type': 'application/json' }
     });
 
   } catch (error: any) {
-    console.error('Chat API Error:', error);
+    console.error('Chat API Fatal Error:', error);
     return new Response(JSON.stringify({ 
-      error: 'Internal Server Error', 
-      message: error?.message || 'An unexpected error occurred'
+      error: 'Execution Error', 
+      message: error?.message || 'An unexpected error occurred during processing'
     }), { status: 500 });
   }
 };
