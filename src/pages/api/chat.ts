@@ -50,9 +50,9 @@ export const POST: APIRoute = async ({ request }) => {
 
     const genAI = new GoogleGenerativeAI(apiKey);
     
-    // Modern Gemini model names
-    const PRIMARY_MODEL = "gemini-1.5-flash";
-    const FALLBACK_MODEL = "gemini-1.5-pro";
+    // 2026 Model lineup: Using 2.0 Flash as primary, pro-latest as fallback
+    const PRIMARY_MODEL = "gemini-2.0-flash";
+    const FALLBACK_MODEL = "gemini-pro-latest";
 
     let model;
     try {
@@ -69,7 +69,7 @@ export const POST: APIRoute = async ({ request }) => {
       1. ONLY answer questions related to Omar's CV.
       2. Respond in the SAME LANGUAGE as the user's question (Arabic for Arabic, English for English).
       3. Omar is a Techno-Functional Engineer (Software Engineering + Business/SAP).
-      4. Be concise and professional.
+      4. Be direct, professional, and helpful.
       
       CV DATA (ENGLISH):
       ${resumeEn}
@@ -88,8 +88,8 @@ export const POST: APIRoute = async ({ request }) => {
       const errorMsg = error?.message || '';
       console.error('Gemini API Error:', errorMsg);
 
-      // If primary model fails (404/503), try the fallback
-      if (errorMsg.includes('404') || errorMsg.includes('503')) {
+      // Handle 503 (High demand) or 404 (Not found) by falling back
+      if (errorMsg.includes('503') || errorMsg.includes('404')) {
         try {
           const fallbackModel = genAI.getGenerativeModel({ model: FALLBACK_MODEL });
           result = await fallbackModel.generateContent([
@@ -97,7 +97,7 @@ export const POST: APIRoute = async ({ request }) => {
             { text: `User Question: ${message}` }
           ]);
         } catch (fallbackError: any) {
-          throw new Error(`Both ${PRIMARY_MODEL} and ${FALLBACK_MODEL} failed. Error: ${fallbackError.message}`);
+          throw new Error(`Critical failure on both ${PRIMARY_MODEL} and ${FALLBACK_MODEL}. Error: ${fallbackError.message}`);
         }
       } else {
         throw error;
