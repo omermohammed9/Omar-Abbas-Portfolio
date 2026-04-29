@@ -49,7 +49,15 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    
+    // Attempt to use gemini-1.5-flash with a fallback to gemini-pro if needed
+    let model;
+    try {
+      model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    } catch (e) {
+      console.warn('Falling back to gemini-pro due to initialization error');
+      model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    }
 
     const systemPrompt = `
       You are Omar Abbas's Interactive Terminal AI Assistant (OMARTERM). 
@@ -67,10 +75,24 @@ export const POST: APIRoute = async ({ request }) => {
       ${resumeAr}
     `;
 
-    const result = await model.generateContent([
-      { text: systemPrompt },
-      { text: `User Question: ${message}` }
-    ]);
+    let result;
+    try {
+      result = await model.generateContent([
+        { text: systemPrompt },
+        { text: `User Question: ${message}` }
+      ]);
+    } catch (error: any) {
+      if (error?.message?.includes('404')) {
+        console.warn('Model not found, trying fallback to gemini-pro');
+        const fallbackModel = genAI.getGenerativeModel({ model: "gemini-pro" });
+        result = await fallbackModel.generateContent([
+          { text: systemPrompt },
+          { text: `User Question: ${message}` }
+        ]);
+      } else {
+        throw error;
+      }
+    }
 
     const responseText = result.response.text();
 
