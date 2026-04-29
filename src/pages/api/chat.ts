@@ -53,13 +53,13 @@ export const POST: APIRoute = async ({ request }) => {
     
     // Models to try in order of preference (Updated for April 2026)
     const MODELS_TO_TRY = [
+      "gemini-3.1-pro-preview",
+      "gemini-3-flash",
+      "gemini-3.1-flash-lite-preview",
       "gemini-2.5-flash",
-      "gemini-2.5-pro",
       "gemini-2.0-flash",
       "gemini-flash-latest",
-      "gemini-pro-latest",
-      "gemini-3.1-pro-preview",
-      "gemini-3-flash-preview"
+      "gemini-pro-latest"
     ];
 
     // Select the relevant CV based on the request language
@@ -79,6 +79,20 @@ export const POST: APIRoute = async ({ request }) => {
       3. Keep responses concise, professional, and formatted for a terminal.
       4. If the question is outside Omar's scope, politely redirect them.
       
+      MAGIC MODE (ACTIONS):
+      You can trigger UI actions by including them in your JSON response.
+      - To change persona: {"action": "SET_PERSONA", "value": "executive" | "engineer"}
+      - To change language: {"action": "SET_LANGUAGE", "value": "en" | "ar"}
+      - To change theme: {"action": "SET_THEME", "value": "dark" | "light"}
+      
+      RESPONSE FORMAT:
+      You MUST ALWAYS respond in valid JSON format with the following schema:
+      {
+        "reply": "Your message to the user here...",
+        "action": "ACTION_NAME" | null,
+        "value": "action_value" | null
+      }
+      
       CV DATA (${language === 'ar' ? 'ARABIC' : 'ENGLISH'}):
       ${relevantCV}
     `;
@@ -91,7 +105,9 @@ export const POST: APIRoute = async ({ request }) => {
         console.log(`Attempting Gemini model: ${modelName}`);
         
         // Try with default version first
-        const model = genAI.getGenerativeModel({ model: modelName });
+        const model = genAI.getGenerativeModel({ 
+          model: modelName,
+        });
         
         result = await model.generateContent({
           contents: [
@@ -104,6 +120,7 @@ export const POST: APIRoute = async ({ request }) => {
             topK: 40,
             topP: 0.95,
             maxOutputTokens: 1024,
+            responseMimeType: "application/json"
           }
         });
         
@@ -115,30 +132,8 @@ export const POST: APIRoute = async ({ request }) => {
         console.error(`Error with model ${modelName}:`, error.message);
         lastError = error;
         
-        // If 404, the model might not exist in the default version (v1beta/v1)
-        // Let's try to explicitly request v1 for stable models if v1beta failed
-        if (error.message?.includes('404') && !modelName.includes('exp') && !modelName.includes('preview')) {
-           try {
-             console.log(`Retrying ${modelName} with explicit v1 version...`);
-             const modelV1 = genAI.getGenerativeModel({ model: modelName }, { apiVersion: 'v1' });
-             result = await modelV1.generateContent({
-               contents: [
-                 { role: 'user', parts: [{ text: systemPrompt }] },
-                 ...history,
-                 { role: 'user', parts: [{ text: `User Question: ${message}` }] }
-               ],
-               generationConfig: { maxOutputTokens: 1024 }
-             });
-             if (result && result.response) {
-               console.log(`Success with model: ${modelName} (v1)`);
-               break;
-             }
-           } catch (v1Error) {
-             console.error(`V1 Retry failed for ${modelName}`);
-           }
-        }
-        
-        continue; // Try next model in the main list
+        // If 404 or other error, try next model
+        continue;
       }
     }
 
@@ -147,11 +142,25 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const responseText = result.response.text();
-
-    return new Response(JSON.stringify({ reply: responseText }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    
+    // Parse the JSON to ensure it's valid
+    try {
+      const jsonResponse = JSON.parse(responseText);
+      return new Response(JSON.stringify(jsonResponse), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    } catch (e) {
+      // Fallback if AI didn't return valid JSON despite instructions
+      return new Response(JSON.stringify({ 
+        reply: responseText, 
+        action: null, 
+        value: null 
+      }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
 
   } catch (error: any) {
     console.error('Chat API Fatal Error:', error);

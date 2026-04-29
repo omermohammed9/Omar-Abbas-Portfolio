@@ -27,6 +27,16 @@ const optimizedImage = await getImage({ src: image, format: 'webp', width: 1200 
 		<link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		
+		<!-- PWA / Mobile Theme -->
+		<meta name="theme-color" content="#0f172a" />
+		<link rel="manifest" href="/manifest.webmanifest" />
+		<meta name="mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+		
+		<!-- Analytics (Privacy-First) -->
+		<!-- Replace data-website-id with your actual Umami ID -->
+		<script defer src="https://cloud.umami.is/script.js" data-website-id="omars-portfolio-analytics"></script>
+
 		<!-- Primary Meta Tags -->
 		<title>{title}</title>
 		<meta name="title" content={title} />

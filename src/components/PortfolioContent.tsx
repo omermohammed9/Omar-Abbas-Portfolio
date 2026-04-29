@@ -14,6 +14,7 @@ import { IconMail, IconPhone, IconMapPin, IconCode, IconGlobe, IconBrandGithub, 
 import SkillsGrid from "./SkillsGrid"
 import Terminal from "./Terminal"
 import ServicesSection from "./ServicesSection"
+import Showcase from "./Showcase"
 
 
 interface PortfolioContentProps {
@@ -190,6 +191,7 @@ function PortfolioInner({ resumeEnFrontmatter, resumeArFrontmatter, en, ar, prof
                 </motion.div>
                 <SkillsGrid />
                 <ServicesSection />
+                <Showcase />
               </CardContent>
             </Card>
           </div>

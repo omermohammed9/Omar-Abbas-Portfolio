@@ -13,7 +13,7 @@ interface Log {
 
 export default function Terminal() {
   const { persona, setPersona } = usePersona()
-  const { t, isRtl, language } = useLanguage()
+  const { t, isRtl, language, setLanguage } = useLanguage()
   const [isOpen, setIsOpen] = React.useState(false)
   const [isMinimized, setIsMinimized] = React.useState(false)
   const [input, setInput] = React.useState("")
@@ -114,6 +114,34 @@ export default function Terminal() {
 
           if (data.reply) {
             newLogs.push({ type: 'output', content: data.reply })
+            
+            // Handle Magic Actions
+            if (data.action) {
+              console.log(`AI Triggered Action: ${data.action}`, data.value);
+              
+              switch (data.action) {
+                case 'SET_PERSONA':
+                  if (data.value === 'executive' || data.value === 'engineer') {
+                    setPersona(data.value);
+                  }
+                  break;
+                case 'SET_LANGUAGE':
+                  if (data.value === 'en' || data.value === 'ar') {
+                    setLanguage(data.value);
+                  }
+                  break;
+                case 'SET_THEME':
+                  if (data.value === 'dark') {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                  } else if (data.value === 'light') {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                  }
+                  break;
+              }
+            }
+
             // Update history
             setHistory(prev => [
               ...prev,
