@@ -50,13 +50,15 @@ export const POST: APIRoute = async ({ request }) => {
 
     const genAI = new GoogleGenerativeAI(apiKey);
     
-    // Attempt to use gemini-1.5-flash with a fallback to gemini-pro if needed
+    // Modern Gemini model names
+    const PRIMARY_MODEL = "gemini-1.5-flash";
+    const FALLBACK_MODEL = "gemini-1.5-pro";
+
     let model;
     try {
-      model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      model = genAI.getGenerativeModel({ model: PRIMARY_MODEL });
     } catch (e) {
-      console.warn('Falling back to gemini-pro due to initialization error');
-      model = genAI.getGenerativeModel({ model: "gemini-pro" });
+      model = genAI.getGenerativeModel({ model: FALLBACK_MODEL });
     }
 
     const systemPrompt = `
@@ -65,11 +67,9 @@ export const POST: APIRoute = async ({ request }) => {
       
       STRICT RULES:
       1. ONLY answer questions related to Omar's CV.
-      2. LANGUAGE: You MUST respond in the SAME LANGUAGE as the user's question.
-         - If the question is in Arabic (عربي), you MUST respond in Arabic.
-         - If the question is in English, you MUST respond in English.
+      2. Respond in the SAME LANGUAGE as the user's question (Arabic for Arabic, English for English).
       3. Omar is a Techno-Functional Engineer (Software Engineering + Business/SAP).
-      4. If the user asks something outside of Omar's CV, politely explain (in the user's language) that you are specialized in Omar's professional profile only.
+      4. Be concise and professional.
       
       CV DATA (ENGLISH):
       ${resumeEn}
@@ -85,13 +85,20 @@ export const POST: APIRoute = async ({ request }) => {
         { text: `User Question: ${message}` }
       ]);
     } catch (error: any) {
-      if (error?.message?.includes('404')) {
-        console.warn('Model not found, trying fallback to gemini-pro');
-        const fallbackModel = genAI.getGenerativeModel({ model: "gemini-pro" });
-        result = await fallbackModel.generateContent([
-          { text: systemPrompt },
-          { text: `User Question: ${message}` }
-        ]);
+      const errorMsg = error?.message || '';
+      console.error('Gemini API Error:', errorMsg);
+
+      // If primary model fails (404/503), try the fallback
+      if (errorMsg.includes('404') || errorMsg.includes('503')) {
+        try {
+          const fallbackModel = genAI.getGenerativeModel({ model: FALLBACK_MODEL });
+          result = await fallbackModel.generateContent([
+            { text: systemPrompt },
+            { text: `User Question: ${message}` }
+          ]);
+        } catch (fallbackError: any) {
+          throw new Error(`Both ${PRIMARY_MODEL} and ${FALLBACK_MODEL} failed. Error: ${fallbackError.message}`);
+        }
       } else {
         throw error;
       }
