@@ -3,24 +3,17 @@ import { motion, AnimatePresence } from "framer-motion"
 import { MessageSquare, X, Send, User, Bot, Loader2 } from "lucide-react"
 import { usePersona } from "./PersonaContext"
 import { useLanguage } from "./LanguageContext"
-import { chatData } from "@/lib/chat-data"
 import { cn } from "@/lib/utils"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import Fuse from "fuse.js"
 
 interface Message {
   role: 'user' | 'assistant';
   content: string;
 }
 
-const fuse = new Fuse(chatData, {
-  keys: ["keywords"],
-  threshold: 0.4
-});
-
 export default function ChatWidget() {
   const { persona } = usePersona()
-  const { t, isRtl } = useLanguage()
+  const { t, isRtl, language } = useLanguage()
   const [isOpen, setIsOpen] = React.useState(false)
   const [input, setInput] = React.useState("")
   const [isTyping, setIsTyping] = React.useState(false)
@@ -37,22 +30,34 @@ export default function ChatWidget() {
     setInput("")
     setIsTyping(true)
 
-    // Simulate AI thinking
-    await new Promise(resolve => setTimeout(resolve, 1000))
-
-    const results = fuse.search(userMsg)
-    let reply = ""
-
-    if (results.length > 0) {
-      reply = results[0].item.answer[persona]
-    } else {
-      reply = persona === 'engineer' 
-        ? "I couldn't find a direct match for that in my documentation. Try asking about my tech stack or projects!"
-        : "I'm not sure I have that information at hand. Please feel free to reach out to me directly for more details!"
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        body: JSON.stringify({ message: userMsg, language }),
+        headers: { 'Content-Type': 'application/json' }
+      })
+      const data = await response.json()
+      
+      if (data.reply) {
+        setMessages(prev => [...prev, { role: 'assistant', content: data.reply }])
+      } else {
+        setMessages(prev => [...prev, { 
+          role: 'assistant', 
+          content: language === 'ar' 
+            ? "عذراً، واجهت مشكلة في معالجة طلبك." 
+            : "Sorry, I encountered an error processing your request." 
+        }])
+      }
+    } catch (error) {
+      setMessages(prev => [...prev, { 
+        role: 'assistant', 
+        content: language === 'ar' 
+          ? "حدث خطأ في الاتصال بالمساعد الذكي." 
+          : "Could not connect to the AI assistant." 
+      }])
+    } finally {
+      setIsTyping(false)
     }
-
-    setMessages(prev => [...prev, { role: 'assistant', content: reply }])
-    setIsTyping(false)
   }
 
   React.useEffect(() => {
