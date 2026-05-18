@@ -104,9 +104,11 @@ export default function MainContentAreas({ controls, activeTab, frontmatter, pro
               >
                 {content}
               </motion.div>
-              <div className="hidden lg:block">
+              <div className="mt-16 space-y-16">
                 <SkillsGrid />
-                <ServicesSection />
+                <div className="hidden lg:block">
+                  <ServicesSection />
+                </div>
                 <Showcase />
                 <ContactForm />
               </div>
