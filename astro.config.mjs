@@ -11,7 +11,10 @@ export default defineConfig({
   output: 'server',
   adapter: netlify(),
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
+    build: {
+      chunkSizeWarningLimit: 5000
+    }
   },
   integrations: [
     react(),

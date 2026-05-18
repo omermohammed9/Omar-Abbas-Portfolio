@@ -3,7 +3,7 @@ import { motion } from "framer-motion"
 import { usePersona } from "./PersonaContext"
 import { useLanguage } from "./LanguageContext"
 import { Card, CardContent } from "./ui/card"
-import { IconBrain, IconPrompt, IconCode, IconRocket, IconTerminal, IconDeviceLaptop, IconServer } from "@tabler/icons-react"
+import { IconBrain, IconPrompt, IconCode, IconRocket, IconTerminal } from "@tabler/icons-react"
 
 export default function Showcase() {
   const { persona } = usePersona()
