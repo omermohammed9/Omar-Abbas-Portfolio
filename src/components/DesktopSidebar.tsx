@@ -5,7 +5,7 @@ import ThemeToggle from "./ThemeToggle"
 import PersonaToggle from "./PersonaToggle"
 import { Card, CardContent } from "./ui/card"
 import { Separator } from "./ui/separator"
-import { IconMail, IconPhone, IconMapPin, IconBrandGithub, IconBrandLinkedin, IconUser, IconBriefcase, IconRocket } from "@tabler/icons-react"
+import { IconMail, IconPhone, IconMapPin, IconBrandGithub, IconBrandLinkedin, IconBrandWhatsapp, IconUser, IconBriefcase, IconRocket } from "@tabler/icons-react"
 
 interface DesktopSidebarProps {
   frontmatter: any
@@ -79,6 +79,11 @@ export default function DesktopSidebar({ frontmatter, profileImage }: DesktopSid
               {frontmatter.linkedin && (
                 <a href={frontmatter.linkedin} target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-xl bg-slate-800/50 hover:bg-[#0a66c2] text-slate-400 hover:text-white border border-slate-700 hover:border-[#0a66c2] shadow-lg hover:shadow-[#0a66c2]/30 transition-all duration-300 active:scale-95 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" title={t("linkedin")} aria-label="LinkedIn Profile">
                   <IconBrandLinkedin className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                </a>
+              )}
+              {frontmatter.whatsapp && (
+                <a href={frontmatter.whatsapp} target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-xl bg-slate-800/50 hover:bg-[#25D366] text-slate-400 hover:text-white border border-slate-700 hover:border-[#25D366] shadow-lg hover:shadow-[#25D366]/30 transition-all duration-300 active:scale-95 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" title={t("whatsapp")} aria-label="WhatsApp Contact">
+                  <IconBrandWhatsapp className="w-5 h-5 group-hover:scale-110 transition-transform" />
                 </a>
               )}
             </div>

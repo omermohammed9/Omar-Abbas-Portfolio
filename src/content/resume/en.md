@@ -6,6 +6,7 @@ location: "Iraq"
 phone: "+964 773-514-3788"
 linkedin: "https://www.linkedin.com/in/omar-mohammed-739a1b208"
 github: "https://github.com/omermohammed9/"
+whatsapp: "https://wa.me/qr/TX3E2JM2SG7EC1"
 ---
 
 

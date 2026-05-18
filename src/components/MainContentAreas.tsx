@@ -3,7 +3,7 @@ import { motion, useAnimation } from "framer-motion"
 import { useLanguage } from "./LanguageContext"
 import { usePersona } from "./PersonaContext"
 import { Card, CardContent } from "./ui/card"
-import { IconMail, IconPhone, IconMapPin, IconBrandGithub, IconBrandLinkedin } from "@tabler/icons-react"
+import { IconMail, IconPhone, IconMapPin, IconBrandGithub, IconBrandLinkedin, IconBrandWhatsapp } from "@tabler/icons-react"
 import FilterGroup from "./FilterGroup"
 import SkillsGrid from "./SkillsGrid"
 import ServicesSection from "./ServicesSection"
@@ -78,6 +78,11 @@ export default function MainContentAreas({ controls, activeTab, frontmatter, pro
                 {frontmatter.linkedin && (
                   <a href={frontmatter.linkedin} target="_blank" rel="noopener noreferrer" className="p-4 rounded-2xl bg-slate-800/50 hover:bg-[#0a66c2] text-slate-400 hover:text-white border border-slate-700 hover:border-[#0a66c2] shadow-xl hover:shadow-[#0a66c2]/30 transition-all duration-300 active:scale-90 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" title={t("linkedin")} aria-label="LinkedIn Profile">
                     <IconBrandLinkedin className="w-6 h-6 group-hover:scale-110 transition-transform" />
+                  </a>
+                )}
+                {frontmatter.whatsapp && (
+                  <a href={frontmatter.whatsapp} target="_blank" rel="noopener noreferrer" className="p-4 rounded-2xl bg-slate-800/50 hover:bg-[#25D366] text-slate-400 hover:text-white border border-slate-700 hover:border-[#25D366] shadow-xl hover:shadow-[#25D366]/30 transition-all duration-300 active:scale-90 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" title={t("whatsapp")} aria-label="WhatsApp Contact">
+                    <IconBrandWhatsapp className="w-6 h-6 group-hover:scale-110 transition-transform" />
                   </a>
                 )}
               </div>
