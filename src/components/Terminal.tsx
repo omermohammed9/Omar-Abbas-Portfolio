@@ -23,9 +23,8 @@ export default function Terminal() {
   const [isServiceAvailable, setIsServiceAvailable] = React.useState(true)
   const [retryInterval, setRetryInterval] = React.useState(60000)
   const [history, setHistory] = React.useState<{role: 'user' | 'model', parts: {text: string}[]}[]>([])
-  const [logs, setLogs] = React.useState<Log[]>([
-    { type: 'output', content: t("terminal.welcome") }
-  ])
+  const [hasCleared, setHasCleared] = React.useState(false)
+  const [logs, setLogs] = React.useState<Log[]>([])
   const scrollRef = React.useRef<HTMLDivElement>(null)
 
   // Initial and periodic service check
@@ -92,7 +91,9 @@ export default function Terminal() {
 
     switch (cleanCmd) {
       case 'help':
-        newLogs.push({ type: 'output', content: isRtl ? 'الأوامر المتاحة: help, clear, skills, bio, persona [engineer|executive], models, exit, matrix, sudo rm -rf /, hire-omar. يمكنك أيضاً سؤالي عن سيرتي الذاتية أو استخدام الميكروفون للتحدث معي بالعربية!' : 'Available commands: help, clear, skills, bio, persona [engineer|executive], models, exit, matrix, sudo rm -rf /, hire-omar. You can also ask me anything about my CV or use the microphone to speak to me in English!' })
+        newLogs.push({ type: 'output', content: isRtl 
+          ? '💡 طريقة الاستخدام:\n- الهاتف: استخدم أزرار "اختراقات سريعة" أدناه أو الميكروفون.\n- الحاسوب: اكتب الأوامر أو اسحب النافذة.\n\nالأوامر المتاحة: help, clear, skills, bio, persona [engineer|executive], models, exit, matrix, sudo rm -rf / (أو sude rmf), hire-omar.\nيمكنك أيضاً سؤالي عن سيرتي الذاتية أو التحدث معي عبر الميكروفون!' 
+          : '💡 Usage:\n- Mobile: Use the "Quick Hacks" buttons below or the microphone.\n- Desktop: Type commands or drag this window.\n\nAvailable commands: help, clear, skills, bio, persona [engineer|executive], models, exit, matrix, sudo rm -rf / (or sude rmf), hire-omar.\nYou can also ask me anything about my CV or use the mic to speak to me!' })
         setLogs([...newLogs])
         break
       case 'matrix':
@@ -104,6 +105,7 @@ export default function Terminal() {
         }, 10000)
         break
       case 'sudo rm -rf /':
+      case 'sude rmf':
         newLogs.push({ type: 'error', content: isRtl ? 'فشل النظام. جاري الحذف...' : 'System critical failure. Deleting all files...' })
         setLogs([...newLogs])
         setTimeout(() => {
@@ -124,6 +126,7 @@ export default function Terminal() {
       case 'clear':
         setLogs([])
         setHistory([])
+        setHasCleared(true)
         return
       case 'skills':
         newLogs.push({ type: 'output', content: isRtl ? 'المهارات التقنية: جافا، نود جي اس، رياكت، نكست، ساب، إس كيو إل، هندسة الأوامر...' : 'Technical: Java, Node.js, React, Nuxt, SAP, SQL, AI Prompting...' })
@@ -310,8 +313,17 @@ export default function Terminal() {
             {/* Content */}
             {!isMinimized && (
               <>
-                <ScrollArea className="flex-1 p-4 h-[300px]" viewportRef={scrollRef}>
+                <ScrollArea className="flex-1 p-4" viewportRef={scrollRef}>
                   <div className="space-y-2">
+                    {!hasCleared && (
+                      <div className={cn(
+                        "break-words whitespace-pre-wrap",
+                        isRtl ? "text-right" : "text-left",
+                        "text-emerald-500 dark:text-emerald-400"
+                      )}>
+                        {t("terminal.welcome")}
+                      </div>
+                    )}
                     {logs.map((log, i) => (
                       <div key={i} className={cn(
                         "break-words whitespace-pre-wrap",

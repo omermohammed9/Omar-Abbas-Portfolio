@@ -6,6 +6,32 @@ import { IconMail, IconSend, IconUser, IconMessage } from "@tabler/icons-react"
 
 export default function ContactForm() {
   const { t, isRtl, language } = useLanguage()
+  const [status, setStatus] = React.useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setStatus('loading')
+    const form = e.currentTarget
+    const formData = new FormData(form)
+    
+    try {
+      const response = await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(formData as any).toString(),
+      })
+      
+      if (response.ok) {
+        setStatus('success')
+        form.reset()
+      } else {
+        setStatus('error')
+      }
+    } catch (error) {
+      console.error(error)
+      setStatus('error')
+    }
+  }
 
   return (
     <section id="contact-form" className="mt-16 space-y-8">
@@ -26,7 +52,7 @@ export default function ContactForm() {
               method="POST" 
               data-netlify="true" 
               className="space-y-6"
-              action="/thanks"
+              onSubmit={handleSubmit}
             >
               <input type="hidden" name="form-name" value="contact" />
               
@@ -81,13 +107,31 @@ export default function ContactForm() {
 
               <motion.button
                 type="submit"
-                className="w-full sm:w-auto px-6 py-3 bg-primary text-primary-foreground font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20 active:scale-95 transform"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                disabled={status === 'loading'}
+                className="w-full sm:w-auto px-6 py-3 bg-primary text-primary-foreground font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20 active:scale-95 transform disabled:opacity-50 disabled:cursor-not-allowed"
+                whileHover={{ scale: status === 'loading' ? 1 : 1.02 }}
+                whileTap={{ scale: status === 'loading' ? 1 : 0.98 }}
               >
-                <IconSend className="w-4 h-4" />
-                {language === "ar" ? "إرسال" : "Send Message"}
+                {status === 'loading' ? (
+                  <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <IconSend className="w-4 h-4" />
+                )}
+                {status === 'loading' 
+                  ? (language === "ar" ? "جاري الإرسال..." : "Sending...") 
+                  : (language === "ar" ? "إرسال" : "Send Message")}
               </motion.button>
+
+              {status === 'success' && (
+                <p className="text-sm text-green-500 font-medium mt-2" role="alert">
+                  {language === "ar" ? "تم إرسال الرسالة بنجاح!" : "Message sent successfully!"}
+                </p>
+              )}
+              {status === 'error' && (
+                <p className="text-sm text-red-500 font-medium mt-2" role="alert">
+                  {language === "ar" ? "حدث خطأ ما. يرجى المحاولة مرة أخرى." : "Something went wrong. Please try again."}
+                </p>
+              )}
             </form>
           </CardContent>
         </Card>

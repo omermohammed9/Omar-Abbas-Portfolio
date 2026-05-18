@@ -50,21 +50,22 @@ const optimizedImage = await getImage({ src: image, format: 'webp', width: 1200 
 		<meta property="og:site_name" content="Omar Abbas Portfolio" />
 		<meta property="og:title" content={title} />
 		<meta property="og:description" content={description} />
-		<meta property="og:image" content={new URL('/og-image.png', Astro.url)} />
+		<meta property="og:image" content={new URL(optimizedImage.src, Astro.site)} />
 
 		<!-- Twitter -->
 		<meta property="twitter:card" content="summary_large_image" />
 		<meta property="twitter:url" content={Astro.url} />
 		<meta property="twitter:title" content={title} />
 		<meta property="twitter:description" content={description} />
-		<meta property="twitter:image" content={new URL('/og-image.png', Astro.url)} />
+		<meta property="twitter:image" content={new URL(optimizedImage.src, Astro.site)} />
 
+		<!-- JSON-LD Schema -->
 		<script type="application/ld+json" set:html={JSON.stringify({
 			  "@context": "https://schema.org",
 			  "@type": "Person",
 			  "name": "Omar Abbas",
-			  "url": "https://omarabbas.me",
-			  "image": "https://omarabbas.me/og-image.png",
+			  "url": "https://omar-abbas.me",
+			  "image": new URL(optimizedImage.src, Astro.site).toString(),
 			  "jobTitle": "Techno-Functional Engineer",
 			  "alumniOf": "University of Khartoum",
 			  "knowsAbout": ["Software Engineering", "SAP Integration", "Java", "React", "Cloud Computing", "AI Strategy"],
