@@ -1,6 +1,6 @@
 import * as React from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { IconTerminal2, IconX, IconMinus, IconMaximize, IconSend } from "@tabler/icons-react"
+import { IconTerminal2, IconX, IconMinus, IconMaximize, IconSend, IconMicrophone } from "@tabler/icons-react"
 import { usePersona } from "./PersonaContext"
 import { useLanguage } from "./LanguageContext"
 import { cn } from "@/lib/utils"
@@ -15,9 +15,11 @@ export default function Terminal() {
   const { persona, setPersona } = usePersona()
   const { t, isRtl, language, setLanguage } = useLanguage()
   const [isOpen, setIsOpen] = React.useState(false)
+  const [triggerConfetti, setTriggerConfetti] = React.useState(false)
   const [isMinimized, setIsMinimized] = React.useState(false)
   const [input, setInput] = React.useState("")
   const [isTyping, setIsTyping] = React.useState(false)
+  const [isListening, setIsListening] = React.useState(false)
   const [isServiceAvailable, setIsServiceAvailable] = React.useState(true)
   const [retryInterval, setRetryInterval] = React.useState(60000)
   const [history, setHistory] = React.useState<{role: 'user' | 'model', parts: {text: string}[]}[]>([])
@@ -45,6 +47,41 @@ export default function Terminal() {
     return () => clearInterval(interval)
   }, [retryInterval])
 
+  const startListening = () => {
+    // @ts-ignore
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert(isRtl ? "متصفحك لا يدعم التعرف على الصوت." : "Your browser does not support Speech Recognition.");
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = language === 'ar' ? 'ar-SA' : 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => {
+      setIsListening(true);
+    };
+
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      setInput(transcript);
+      handleCommand(transcript);
+    };
+
+    recognition.onerror = (event: any) => {
+      console.error("Speech recognition error", event.error);
+      setIsListening(false);
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+
+    recognition.start();
+  };
+
   const handleCommand = async (cmd: string) => {
     const cleanCmd = cmd.toLowerCase().trim()
     if (!cleanCmd) return
@@ -55,8 +92,34 @@ export default function Terminal() {
 
     switch (cleanCmd) {
       case 'help':
-        newLogs.push({ type: 'output', content: isRtl ? 'الأوامر المتاحة: help, clear, skills, bio, persona [engineer|executive], models, exit. يمكنك أيضاً سؤالي عن سيرتي الذاتية!' : 'Available commands: help, clear, skills, bio, persona [engineer|executive], models, exit. You can also ask me anything about my CV!' })
+        newLogs.push({ type: 'output', content: isRtl ? 'الأوامر المتاحة: help, clear, skills, bio, persona [engineer|executive], models, exit, matrix, sudo rm -rf /, hire-omar. يمكنك أيضاً سؤالي عن سيرتي الذاتية أو استخدام الميكروفون للتحدث معي بالعربية!' : 'Available commands: help, clear, skills, bio, persona [engineer|executive], models, exit, matrix, sudo rm -rf /, hire-omar. You can also ask me anything about my CV or use the microphone to speak to me in English!' })
         setLogs([...newLogs])
+        break
+      case 'matrix':
+        document.documentElement.classList.add('matrix-mode')
+        newLogs.push({ type: 'output', content: isRtl ? 'جاري تشغيل مصفوفة الرمز...' : 'Entering the Matrix...' })
+        setLogs([...newLogs])
+        setTimeout(() => {
+          document.documentElement.classList.remove('matrix-mode')
+        }, 10000)
+        break
+      case 'sudo rm -rf /':
+        newLogs.push({ type: 'error', content: isRtl ? 'فشل النظام. جاري الحذف...' : 'System critical failure. Deleting all files...' })
+        setLogs([...newLogs])
+        setTimeout(() => {
+          document.documentElement.classList.add('system-failure')
+          setTimeout(() => {
+            document.documentElement.classList.remove('system-failure')
+            window.location.reload()
+          }, 3000)
+        }, 1000)
+        break
+      case 'hire-omar':
+        newLogs.push({ type: 'output', content: isRtl ? 'خيار رائع! جاري فتح نموذج الاتصال...' : 'Excellent choice! Opening contact form...' })
+        setLogs([...newLogs])
+        document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' })
+        setTriggerConfetti(true)
+        setTimeout(() => setTriggerConfetti(false), 3000)
         break
       case 'clear':
         setLogs([])
@@ -171,6 +234,31 @@ export default function Terminal() {
 
   return (
     <>
+      {triggerConfetti && (
+        <div className="fixed inset-0 pointer-events-none z-[100]">
+          {[...Array(50)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-2 h-2 rounded-full"
+              initial={{ 
+                top: -10, 
+                left: `${Math.random() * 100}vw`,
+                backgroundColor: `hsl(${Math.random() * 360}, 100%, 50%)`
+              }}
+              animate={{ 
+                top: '100vh',
+                rotate: 360,
+                x: [0, Math.random() * 50 - 25, 0]
+              }}
+              transition={{ 
+                duration: Math.random() * 2 + 1,
+                ease: "linear",
+                repeat: 0
+              }}
+            />
+          ))}
+        </div>
+      )}
       {/* Floating Toggle Button */}
       <button
         onClick={() => setIsOpen(true)}
@@ -191,15 +279,15 @@ export default function Terminal() {
                 opacity: 1, 
                 scale: 1, 
                 y: 0,
-                height: isMinimized ? '40px' : '400px',
-                width: 'min(90vw, 500px)'
+                height: isMinimized ? '40px' : 'min(400px, 60vh)',
+                width: 'min(92vw, 500px)'
             }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            drag
+            drag={typeof window !== 'undefined' && !window.matchMedia('(pointer: coarse)').matches}
             dragConstraints={{ top: 0, left: -1000, right: 1000, bottom: 1000 }}
             className={cn(
               "fixed z-50 overflow-hidden bg-card/95 backdrop-blur-xl border border-border rounded-xl shadow-2xl flex flex-col font-mono text-xs",
-              isRtl ? "left-6" : "right-6",
+              isRtl ? "left-4 sm:left-6" : "right-4 sm:right-6",
               "bottom-24 lg:bottom-8"
             )}
           >
@@ -231,7 +319,7 @@ export default function Terminal() {
                         log.type === 'input' ? "text-foreground font-bold" : 
                         log.type === 'error' ? "text-destructive" : "text-emerald-500 dark:text-emerald-400"
                       )}>
-                        {log.type === 'input' && <span className="text-emerald-500 mr-2">$</span>}
+                        {log.type === 'input' && <span className="text-emerald-500 me-2">$</span>}
                         {log.content}
                       </div>
                     ))}
@@ -242,6 +330,31 @@ export default function Terminal() {
                     )}
                   </div>
                 </ScrollArea>
+
+                {/* Easter Eggs / Quick Hacks */}
+                <div className="px-3 py-2 bg-muted/20 border-t border-border flex flex-wrap gap-2 items-center" dir={isRtl ? "rtl" : "ltr"}>
+                  <span className="text-xs text-muted-foreground opacity-70">
+                    {isRtl ? "اختراقات سريعة:" : "Quick Hacks:"}
+                  </span>
+                  <button 
+                    onClick={() => handleCommand('matrix')}
+                    className="text-[10px] px-2 py-1 rounded bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 hover:bg-emerald-500/30 transition-all hover:scale-105"
+                  >
+                    {isRtl ? "مصفوفة الرمز 🟩" : "Matrix Mode 🟩"}
+                  </button>
+                  <button 
+                    onClick={() => handleCommand('hire-omar')}
+                    className="text-[10px] px-2 py-1 rounded bg-blue-500/10 text-blue-500 border border-blue-500/20 hover:bg-blue-500/30 transition-all hover:scale-105"
+                  >
+                    {isRtl ? "وظّف عمر 🎉" : "Hire Omar 🎉"}
+                  </button>
+                  <button 
+                    onClick={() => handleCommand('sudo rm -rf /')}
+                    className="text-[10px] px-2 py-1 rounded bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/30 transition-all hover:scale-105 animate-pulse"
+                  >
+                    {isRtl ? "لا تنقر ☠️" : "DO NOT CLICK ☠️"}
+                  </button>
+                </div>
 
                 {/* Input */}
                 <form 
@@ -258,10 +371,24 @@ export default function Terminal() {
                     autoFocus
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    placeholder={isRtl ? "اكتب هنا..." : "type help or ask anything..."}
+                    placeholder={
+                      isListening 
+                        ? (isRtl ? "...جاري الاستماع (بالعربية)" : "Listening (English)...") 
+                        : (isRtl ? "اكتب أو انقر على الميكروفون للتحدث..." : "Type or click mic to speak...")
+                    }
                     className="flex-1 bg-transparent border-none outline-none text-foreground placeholder:text-muted-foreground"
                     dir={isRtl ? "rtl" : "ltr"}
                   />
+                  <button 
+                    type="button" 
+                    onClick={startListening} 
+                    disabled={isTyping || isListening} 
+                    aria-label={isRtl ? "التحدث (بالعربية)" : "Speak (English)"}
+                    title={isRtl ? "التحدث (بالعربية)" : "Speak (English)"}
+                    className={cn("p-1 transition-colors", isListening ? "text-red-500 animate-pulse" : "text-emerald-500/50 hover:text-emerald-500")}
+                  >
+                    <IconMicrophone className={cn("w-4 h-4", isListening && "scale-110")} />
+                  </button>
                   <button type="submit" disabled={isTyping} aria-label={isRtl ? "إرسال" : "Send"}>
                     <IconSend className={cn("w-3 h-3 transition-colors", isTyping ? "text-muted" : "text-emerald-500/50 hover:text-emerald-500")} />
                   </button>

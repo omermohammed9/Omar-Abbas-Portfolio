@@ -18,6 +18,7 @@ const translations = {
     "nav.experience": "Experience",
     "nav.education": "Education",
     "nav.theme": "Theme",
+    "nav.navigation": "Navigation",
     "filter.all": "All",
     "filter.technical": "Technical",
     "filter.management": "Management",
@@ -32,6 +33,7 @@ const translations = {
     "github": "GitHub",
     "linkedin": "LinkedIn",
     "site.title": "Omar Abbas | Portfolio",
+    "site.description": "Portfolio of Omar Abbas, a Techno-Functional Engineer bridging Software Engineering and SAP Business Integration.",
     "resume.skills": "Core Competencies",
     "terminal.welcome": "Welcome to Omar's Interactive Terminal. Type 'help' to begin.",
     "chat.welcome": "Hi! I'm Omar's AI assistant. Ask me anything about his experience!",
@@ -69,6 +71,7 @@ const translations = {
     "nav.experience": "الخبرة",
     "nav.education": "التعليم",
     "nav.theme": "المظهر",
+    "nav.navigation": "التنقل",
     "filter.all": "الكل",
     "filter.technical": "تقني",
     "filter.management": "إداري",
@@ -83,6 +86,7 @@ const translations = {
     "github": "جيت هاب",
     "linkedin": "لينكد إن",
     "site.title": "عمر عباس | معرض الأعمال",
+    "site.description": "معرض أعمال عمر عباس، مهندس تقني وظيفي يربط بين هندسة البرمجيات وتكامل أعمال SAP.",
     "resume.skills": "الكفاءات الأساسية",
     "terminal.welcome": "مرحباً بك في محطة عمر التفاعلية. اكتب 'help' للبدء.",
     "chat.welcome": "مرحباً! أنا المساعد الذكي الخاص بعمر. اسألني أي شيء عن خبرته!",
@@ -125,6 +129,10 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
       document.documentElement.lang = lang
       document.documentElement.dir = lang === "ar" ? "rtl" : "ltr"
       document.title = translations[lang]["site.title"]
+      const metaDesc = document.querySelector('meta[name="description"]')
+      if (metaDesc) {
+        metaDesc.setAttribute("content", translations[lang]["site.description"])
+      }
       localStorage.setItem("portfolio-language", lang)
     }
   }

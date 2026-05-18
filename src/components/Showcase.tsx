@@ -60,12 +60,22 @@ export default function Showcase() {
       <Card className="glass-premium border-primary/10 overflow-hidden">
         <CardContent className="p-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8 relative">
-            {/* Connection Lines */}
-            <div className="hidden md:block absolute top-1/2 left-1/4 right-1/4 h-0.5 bg-gradient-to-r from-amber-500/50 via-blue-500/50 to-emerald-500/50 -translate-y-1/2 -z-10">
+            {/* Connection Lines (Desktop) */}
+            <div className="hidden md:block absolute top-1/2 left-[15%] right-[15%] h-0.5 bg-gradient-to-r from-amber-500/50 via-blue-500/50 to-emerald-500/50 -translate-y-1/2 -z-10">
               <motion.div 
                 className="h-full bg-primary shadow-[0_0_10px_rgba(var(--primary),0.5)]"
                 initial={{ width: "0%", left: "0%" }}
                 animate={{ width: "100%" }}
+                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+              />
+            </div>
+
+            {/* Connection Lines (Mobile) */}
+            <div className="md:hidden absolute top-[10%] bottom-[10%] left-1/2 w-0.5 bg-gradient-to-b from-amber-500/50 via-blue-500/50 to-emerald-500/50 -translate-x-1/2 -z-10">
+              <motion.div 
+                className="w-full bg-primary shadow-[0_0_10px_rgba(var(--primary),0.5)]"
+                initial={{ height: "0%", top: "0%" }}
+                animate={{ height: "100%" }}
                 transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
               />
             </div>

@@ -4,7 +4,7 @@ tagline: "مهندس برمجيات وأخصائي إدارة أعمال"
 contact: "omermohammedabbas99@gmail.com"
 location: "العراق"
 phone: "+964 773-514-3788"
-linkedin: "https://www.linkedin.com/in/omar-mohammed-739a1b208/"
+linkedin: "https://www.linkedin.com/in/omar-mohammed-739a1b208"
 github: "https://github.com/omermohammed9/"
 ---
 

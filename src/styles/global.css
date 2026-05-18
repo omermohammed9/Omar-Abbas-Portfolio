@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
@@ -162,19 +163,42 @@
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
   }
   
+  html.persona-engineer .card, 
+  html.persona-engineer .glass, 
+  html.persona-engineer .glass-premium {
+    border: 1px solid var(--color-emerald-500) !important;
+    box-shadow: none !important;
+    background: rgba(255, 255, 255, 0.8) !important;
+    border-radius: 0 !important;
+  }
+
+  html.dark.persona-engineer .card, 
+  html.dark.persona-engineer .glass, 
+  html.dark.persona-engineer .glass-premium {
+    background: rgba(0, 0, 0, 0.8) !important;
+  }
+  
   html.persona-engineer[dir="rtl"] {
     font-family: 'IBM Plex Sans Arabic', sans-serif !important;
   }
 
   /* Executive Persona Overrides (Premium/Corporate look) */
   html.persona-executive {
-    --primary: oklch(0.6 0.1 240); /* Deep Slate Blue */
+    --primary: oklch(0.6 0.1 50); /* Gold/Bronze */
     --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.9 0.02 240);
-    --secondary-foreground: oklch(0.2 0.05 240);
-    --accent: oklch(0.6 0.1 240 / 10%);
-    --accent-foreground: oklch(0.6 0.1 240);
+    --secondary: oklch(0.95 0.02 50);
+    --secondary-foreground: oklch(0.2 0.05 50);
+    --accent: oklch(0.6 0.1 50 / 10%);
+    --accent-foreground: oklch(0.6 0.1 50);
     --radius: 1.25rem; /* Modern rounded corners */
+    font-family: 'Playfair Display', serif !important;
+  }
+  
+  html.persona-executive .glass-premium {
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(212, 175, 55, 0.3) !important; /* Gold border */
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37) !important;
   }
 
   /* Glassmorphism Utilities */
@@ -228,5 +252,47 @@
 #resume-content h2:nth-of-type(3), 
 #resume-content h2:nth-of-type(3) + ul {
     display: none;
+}
+
+/* Matrix Mode */
+.matrix-mode body {
+  background: #000 !important;
+}
+.matrix-mode::before {
+  content: "101010101010101010101010101010101010101010101010101010";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.15;
+  color: #00ff00;
+  font-family: monospace;
+  font-size: 1.5rem;
+  line-height: 1;
+  text-shadow: 0 0 5px #00ff00;
+  animation: matrix-rain 5s linear infinite;
+}
+@keyframes matrix-rain {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+/* System Failure */
+.system-failure {
+  animation: glitch 0.1s linear infinite;
+}
+.system-failure body {
+  background: #ff0000 !important;
+  color: #000 !important;
+}
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-10px, 5px); filter: invert(1); }
+  40% { transform: translate(-5px, -5px); }
+  60% { transform: translate(15px, 15px); }
+  80% { transform: translate(5px, -5px); }
+  100% { transform: translate(0); }
 }
 

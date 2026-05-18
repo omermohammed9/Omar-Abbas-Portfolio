@@ -139,7 +139,7 @@ export default function ServicesSection() {
         {services.map((service) => {
           const Icon = service.icon
           return (
-            <motion.div key={service.id} variants={item}>
+            <motion.div key={service.id} variants={item} className="h-full">
               <Card className="group relative overflow-hidden glass-premium border-border/50 hover:border-primary/50 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/5 h-full">
                 <div className={`absolute inset-0 bg-gradient-to-br ${service.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
                 

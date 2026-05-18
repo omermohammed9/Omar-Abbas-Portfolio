@@ -8,16 +8,25 @@ import {
   SheetClose,
 } from "@/components/ui/sheet"
 
-export default function MobileMenu() {
+interface MobileMenuProps {
+  setActiveTab: (tab: string) => void
+}
+
+export default function MobileMenu({ setActiveTab }: MobileMenuProps) {
   const { t, isRtl } = useLanguage()
   const [open, setOpen] = React.useState(false)
 
   const menuItems = [
-    { href: "#", label: t("nav.home") },
-    { href: "#experience", label: t("nav.experience") },
-    { href: "#services", label: t("nav.services") },
-    { href: "#education", label: t("nav.education") },
+    { id: "profile", label: t("nav.home") },
+    { id: "experience", label: t("nav.experience") },
+    { id: "services", label: t("nav.services") },
+    { id: "settings", label: t("nav.preferences") },
   ]
+
+  const handleNav = (id: string) => {
+    setActiveTab(id)
+    setOpen(false)
+  }
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -35,21 +44,23 @@ export default function MobileMenu() {
           </div>
           <nav className="flex flex-col space-y-4">
             {menuItems.map((item) => (
-              <a 
-                key={item.label}
-                href={item.href} 
-                onClick={() => setOpen(false)}
-                className="text-3xl font-black tracking-tighter hover:text-primary transition-all active:scale-95 py-2 border-b border-border/50"
+              <button 
+                key={item.id}
+                onClick={() => handleNav(item.id)}
+                className="text-left rtl:text-right text-3xl font-black tracking-tighter hover:text-primary transition-all active:scale-95 py-2 border-b border-border/50"
               >
                 {item.label}
-              </a>
+              </button>
             ))}
           </nav>
           
           <div className="pt-12 space-y-6">
              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">{t("nav.preferences")}</p>
              <div className="grid grid-cols-1 gap-4">
-                {/* We can add quick toggles here if needed */}
+                {/* Quick actions or info can go here */}
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  {isRtl ? "استخدم القائمة السفلية للتنقل السريع بين الأقسام." : "Use the bottom navigation for quick access to different sections."}
+                </p>
              </div>
           </div>
         </div>

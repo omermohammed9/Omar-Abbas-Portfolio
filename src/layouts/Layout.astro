@@ -59,8 +59,7 @@ const optimizedImage = await getImage({ src: image, format: 'webp', width: 1200 
 		<meta property="twitter:description" content={description} />
 		<meta property="twitter:image" content={new URL('/og-image.png', Astro.url)} />
 
-		<script type="application/ld+json">
-			{
+		<script type="application/ld+json" set:html={JSON.stringify({
 			  "@context": "https://schema.org",
 			  "@type": "Person",
 			  "name": "Omar Abbas",
@@ -73,8 +72,7 @@ const optimizedImage = await getImage({ src: image, format: 'webp', width: 1200 
 				"https://github.com/omermohammed9",
 				"https://linkedin.com/in/omarabbas"
 			  ]
-			}
-		</script>
+			})} />
 
 		<script is:inline>
 			const theme = (() => {
@@ -96,6 +94,7 @@ const optimizedImage = await getImage({ src: image, format: 'webp', width: 1200 
 		</script>
 	</head>
 	<body class="min-h-screen">
+		<a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:z-100 focus:p-4 focus:bg-background focus:text-foreground focus:outline-none focus:ring-2 focus:ring-primary font-bold">Skip to main content</a>
 		<slot />
 	</body>
 </html>

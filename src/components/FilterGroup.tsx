@@ -44,13 +44,13 @@ export default function FilterGroup() {
       if (h3.innerHTML.includes("[Technical]")) {
         h3.innerHTML = h3.innerHTML.replace(
           "[Technical]", 
-          `<span class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-[10px] font-bold transition-colors border-blue-200 dark:border-blue-500/30 bg-blue-100 dark:bg-blue-500/10 text-blue-700 dark:text-blue-400 shadow-sm ${isRtl ? 'mr-3' : 'ml-3'} align-middle backdrop-blur-sm">${t("filter.technical")}</span>`
+          `<span class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-[10px] font-bold transition-colors border-blue-200 dark:border-blue-500/30 bg-blue-100 dark:bg-blue-500/10 text-blue-700 dark:text-blue-400 shadow-sm ms-3 align-middle backdrop-blur-sm">${t("filter.technical")}</span>`
         )
       }
       if (h3.innerHTML.includes("[Management]")) {
         h3.innerHTML = h3.innerHTML.replace(
           "[Management]", 
-          `<span class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-[10px] font-bold transition-colors border-emerald-200 dark:border-emerald-500/30 bg-emerald-100 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 shadow-sm ${isRtl ? 'mr-3' : 'ml-3'} align-middle backdrop-blur-sm">${t("filter.management")}</span>`
+          `<span class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-[10px] font-bold transition-colors border-emerald-200 dark:border-emerald-500/30 bg-emerald-100 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 shadow-sm ms-3 align-middle backdrop-blur-sm">${t("filter.management")}</span>`
         )
       }
 

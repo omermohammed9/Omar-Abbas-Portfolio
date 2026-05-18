@@ -8,10 +8,12 @@ import profileImage from '../assets/profile.jpg';
 
 <Layout title="Omar Abbas | Portfolio">
   <PortfolioContent 
-    client:load 
+    client:idle 
     resumeEnFrontmatter={resumeEn.frontmatter}
     resumeArFrontmatter={resumeAr.frontmatter}
     profileImage={profileImage}
+    en={undefined}
+    ar={undefined}
   >
     <resumeEn.Content slot="en" />
     <resumeAr.Content slot="ar" />

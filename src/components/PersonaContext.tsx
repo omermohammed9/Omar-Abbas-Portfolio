@@ -18,6 +18,14 @@ export function PersonaProvider({ children }: { children: React.ReactNode }) {
       document.documentElement.classList.remove("persona-engineer", "persona-executive")
       document.documentElement.classList.add(`persona-${newPersona}`)
       localStorage.setItem("portfolio-persona", newPersona)
+      
+      if (newPersona === 'engineer') {
+        document.documentElement.classList.add('dark')
+        localStorage.setItem('theme', 'dark')
+      } else if (newPersona === 'executive') {
+        document.documentElement.classList.remove('dark')
+        localStorage.setItem('theme', 'light')
+      }
     }
   }
 
