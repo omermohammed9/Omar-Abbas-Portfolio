@@ -7,18 +7,21 @@ interface Props {
 	title?: string;
 	description?: string;
 	image?: any;
+	lang?: "en" | "ar";
 }
 
 const { 
 	title = "Omar Abbas | Techno-Functional Engineer", 
 	description = "Portfolio of Omar Abbas, a Techno-Functional Engineer bridging Software Engineering and SAP Business Integration.",
-	image = profileImage
+	image = profileImage,
+	lang = "en"
 } = Astro.props;
 
 const optimizedImage = await getImage({ src: image, format: 'webp', width: 1200 });
+const dir = lang === "ar" ? "rtl" : "ltr";
 ---
 <!doctype html>
-<html lang="en">
+<html lang={lang} dir={dir}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
@@ -44,6 +47,11 @@ const optimizedImage = await getImage({ src: image, format: 'webp', width: 1200 
 		<meta name="author" content="Omar Abbas" />
 		<link rel="canonical" href={Astro.url} />
 
+		<!-- Alternate Language Links for SEO -->
+		<link rel="alternate" hreflang="en" href={new URL('/en/', Astro.site || 'https://omar-abbas.me')} />
+		<link rel="alternate" hreflang="ar" href={new URL('/ar/', Astro.site || 'https://omar-abbas.me')} />
+		<link rel="alternate" hreflang="x-default" href={new URL('/', Astro.site || 'https://omar-abbas.me')} />
+
 		<!-- Open Graph / Facebook -->
 		<meta property="og:type" content="website" />
 		<meta property="og:url" content={Astro.url} />
@@ -66,7 +74,7 @@ const optimizedImage = await getImage({ src: image, format: 'webp', width: 1200 
 			  "name": "Omar Abbas",
 			  "url": "https://omar-abbas.me",
 			  "image": new URL(optimizedImage.src, Astro.site).toString(),
-			  "jobTitle": "Techno-Functional Engineer",
+			  "jobTitle": lang === "ar" ? "مهندس تقني وظيفي" : "Techno-Functional Engineer",
 			  "alumniOf": "University of Khartoum",
 			  "knowsAbout": ["Software Engineering", "SAP Integration", "Java", "React", "Cloud Computing", "AI Strategy"],
 			  "sameAs": [

@@ -40,12 +40,12 @@ export default function BlogSection() {
   return (
     <section id="blog" className="mt-16 space-y-8">
       <div className="flex items-center gap-4 mb-8">
-        <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border to-transparent" />
+        <div className="h-px flex-1 bg-linear-to-r from-transparent via-border to-transparent" />
         <h2 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-3 whitespace-nowrap">
           <IconBook className="w-6 h-6 text-primary" />
           {t("nav.blog") !== "nav.blog" ? t("nav.blog") : (language === "ar" ? "المدونة" : "Blog")}
         </h2>
-        <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border to-transparent" />
+        <div className="h-px flex-1 bg-linear-to-r from-transparent via-border to-transparent" />
       </div>
 
       <div className="space-y-6">

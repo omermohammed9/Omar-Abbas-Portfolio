@@ -36,12 +36,12 @@ export default function ContactForm() {
   return (
     <section id="contact-form" className="mt-16 space-y-8">
       <div className="flex items-center gap-4 mb-8">
-        <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border to-transparent" />
+        <div className="h-px flex-1 bg-linear-to-r from-transparent via-border to-transparent" />
         <h2 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-3 whitespace-nowrap">
           <IconMail className="w-6 h-6 text-primary" />
           {t("nav.contact") !== "nav.contact" ? t("nav.contact") : (language === "ar" ? "اتصل بنا" : "Contact Me")}
         </h2>
-        <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border to-transparent" />
+        <div className="h-px flex-1 bg-linear-to-r from-transparent via-border to-transparent" />
       </div>
 
       <div className="max-w-2xl mx-auto">

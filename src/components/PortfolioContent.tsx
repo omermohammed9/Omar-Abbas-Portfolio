@@ -18,12 +18,24 @@ interface PortfolioContentProps {
   ar?: React.ReactNode
   children?: React.ReactNode
   profileImage?: { src: string }
+  initialLanguage?: "en" | "ar"
 }
 
 function PortfolioInner({ resumeEnFrontmatter, resumeArFrontmatter, en, ar, profileImage }: PortfolioContentProps) {
   const { language, isRtl, t } = useLanguage()
   const { persona } = usePersona()
-  const [activeTab, setActiveTab] = React.useState("profile")
+  const [activeTab, setActiveTab] = React.useState(() => {
+    if (typeof window !== 'undefined' && window.location.hash) {
+      return window.location.hash.replace('#', '');
+    }
+    return "profile";
+  })
+
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.location.hash = activeTab;
+    }
+  }, [activeTab]);
   const frontmatter = language === "en" ? resumeEnFrontmatter : resumeArFrontmatter
   const content = language === "en" ? en : ar
 
@@ -68,7 +80,7 @@ function PortfolioInner({ resumeEnFrontmatter, resumeArFrontmatter, en, ar, prof
 
 export default function PortfolioContent(props: PortfolioContentProps) {
   return (
-    <LanguageProvider>
+    <LanguageProvider initialLanguage={props.initialLanguage}>
       <PersonaProvider>
         <PortfolioInner {...props} />
       </PersonaProvider>

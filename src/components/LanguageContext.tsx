@@ -122,37 +122,23 @@ const translations = {
 
 const LanguageContext = React.createContext<LanguageContextType | undefined>(undefined)
 
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguageState] = React.useState<Language>("en")
+export function LanguageProvider({ children, initialLanguage = "en" }: { children: React.ReactNode, initialLanguage?: "en" | "ar" }) {
+  const [language, setLanguageState] = React.useState<Language>(initialLanguage)
 
   const setLanguage = (lang: Language) => {
-    setLanguageState(lang)
+    if (lang === language) return;
+    
     if (typeof window !== "undefined") {
-      document.documentElement.lang = lang
-      document.documentElement.dir = lang === "ar" ? "rtl" : "ltr"
-      document.title = translations[lang]["site.title"]
-      const metaDesc = document.querySelector('meta[name="description"]')
-      if (metaDesc) {
-        metaDesc.setAttribute("content", translations[lang]["site.description"])
-      }
       localStorage.setItem("portfolio-language", lang)
+      window.location.href = `/${lang}/${window.location.hash}`
     }
   }
 
   React.useEffect(() => {
-    const saved = localStorage.getItem("portfolio-language") as Language
-    if (saved && (saved === "en" || saved === "ar")) {
-      setLanguage(saved)
-    } else {
-        // Detect browser language
-        const browserLang = navigator.language.split('-')[0]
-        if (browserLang === 'ar') {
-            setLanguage('ar')
-        } else {
-            setLanguage('en')
-        }
+    if (typeof window !== "undefined") {
+      localStorage.setItem("portfolio-language", initialLanguage)
     }
-  }, [])
+  }, [initialLanguage])
 
   const t = (key: string) => {
     return translations[language][key as keyof typeof translations['en']] || key

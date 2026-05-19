@@ -10,6 +10,14 @@ export default defineConfig({
   site: 'https://omar-abbas.me',
   output: 'server',
   adapter: netlify(),
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en', 'ar'],
+    routing: {
+      prefixDefaultLocale: true,
+      redirectToDefaultLocale: false
+    }
+  },
   vite: {
     plugins: [tailwindcss()],
     build: {

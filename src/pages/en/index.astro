@@ -1,0 +1,22 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import * as resumeEn from '../../content/resume/en.md';
+import * as resumeAr from '../../content/resume/ar.md';
+import PortfolioContent from '@/components/PortfolioContent';
+import profileImage from '../../assets/profile.jpg';
+---
+
+<Layout title="Omar Abbas | Portfolio" lang="en">
+  <PortfolioContent 
+    client:idle 
+    resumeEnFrontmatter={resumeEn.frontmatter}
+    resumeArFrontmatter={resumeAr.frontmatter}
+    profileImage={profileImage}
+    en={undefined}
+    ar={undefined}
+    initialLanguage="en"
+  >
+    <resumeEn.Content slot="en" />
+    <resumeAr.Content slot="ar" />
+  </PortfolioContent>
+</Layout>

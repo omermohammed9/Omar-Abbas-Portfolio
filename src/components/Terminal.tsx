@@ -238,7 +238,7 @@ export default function Terminal() {
   return (
     <>
       {triggerConfetti && (
-        <div className="fixed inset-0 pointer-events-none z-[100]">
+        <div className="fixed inset-0 pointer-events-none z-100">
           {[...Array(50)].map((_, i) => (
             <motion.div
               key={i}
@@ -317,7 +317,7 @@ export default function Terminal() {
                   <div className="space-y-2">
                     {!hasCleared && (
                       <div className={cn(
-                        "break-words whitespace-pre-wrap",
+                        "wrap-break-word whitespace-pre-wrap",
                         isRtl ? "text-right" : "text-left",
                         "text-emerald-500 dark:text-emerald-400"
                       )}>
@@ -326,7 +326,7 @@ export default function Terminal() {
                     )}
                     {logs.map((log, i) => (
                       <div key={i} className={cn(
-                        "break-words whitespace-pre-wrap",
+                        "wrap-break-word whitespace-pre-wrap",
                         isRtl ? "text-right" : "text-left",
                         log.type === 'input' ? "text-foreground font-bold" : 
                         log.type === 'error' ? "text-destructive" : "text-emerald-500 dark:text-emerald-400"
